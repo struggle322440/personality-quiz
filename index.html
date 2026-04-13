@@ -47,8 +47,9 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .tab:hover{border-color:#4f46e5;color:#4f46e5}
 .tab.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
 .rbox{background:#f8fafc;border-radius:16px;padding:22px;border:1.5px solid #e2e8f0}
-.rhead{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
-.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;font-weight:800;flex-shrink:0}
+.rhead{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.avatar{width:96px;height:96px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #e2e8f0}
+.rhead-info{display:flex;flex-direction:column;gap:4px}
 .badge{background:#4f46e5;color:#fff;font-weight:700;font-size:1.3rem;padding:5px 16px;border-radius:99px}
 .nick{font-size:1.05rem;color:#64748b;font-weight:500}
 .rtxt{white-space:pre-line;line-height:1.8;color:#334155;margin:14px 0;font-size:.98rem}
@@ -80,12 +81,9 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .modal-btn-fwd{background:#10b981}
 .modal-btn-close{background:#64748b}
 .modal-hint{color:rgba(255,255,255,.7);font-size:.82rem;margin-top:12px;text-align:center}
-.av-style-wrap{display:flex;gap:4px}
-.av-style{padding:3px 10px;border-radius:99px;border:1px solid #e2e8f0;background:none;font-size:.75rem;cursor:pointer;color:#64748b;transition:all .15s}
-.av-style:hover{border-color:#4f46e5;color:#4f46e5}
-.av-style.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
+
 .foot{margin-top:28px;text-align:center;color:#94a3b8;font-size:.78rem}
-@media(max-width:480px){body{padding:10px}.card{padding:16px 12px}.qcard{padding:12px 10px}.opt{padding:8px 10px;gap:8px}.rhead{flex-direction:column;align-items:flex-start}.avatar{width:56px;height:56px;font-size:1.3rem}.score-dim{grid-template-columns:1fr}}
+@media(max-width:480px){body{padding:10px}.card{padding:16px 12px}.qcard{padding:12px 10px}.opt{padding:8px 10px;gap:8px}.rhead{flex-direction:row;align-items:center}.avatar{width:72px;height:72px}.score-dim{grid-template-columns:1fr}}
 .result-card{background:#fff;border-radius:20px;padding:24px;text-align:center}
 .result-card .logo{font-size:1.2rem;font-weight:700;color:#4f46e5;margin-bottom:16px}
 .result-card .mbti-type{font-size:2.5rem;font-weight:800;color:#0f172a;margin:12px 0}
@@ -127,14 +125,10 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
     </div>
     <div class="rbox">
       <div class="rhead">
-        <div class="avatar" id="av">IN</div>
-        <div style="flex:1">
-          <div><div class="badge" id="badge">INTJ</div><div class="nick" id="nick">紫老头</div></div>
-          <div class="av-style-wrap" id="avStyleWrap" style="display:none;margin-top:8px">
-            <button class="av-style on" data-s="1">萌系</button>
-            <button class="av-style" data-s="2">动物</button>
-            <button class="av-style" data-s="3">符号</button>
-          </div>
+        <img class="avatar" id="av" src="avatars/INTJ.png" alt="INTJ">
+        <div class="rhead-info">
+          <div class="badge" id="badge">INTJ</div>
+          <div class="nick" id="nick">紫老头</div>
         </div>
       </div>
       <div class="rtxt" id="rtxt"></div>
@@ -730,26 +724,7 @@ var GM={
 "ESFP":"你本身就是光。别总是忙着照亮别人——转过身，你也在发光。"
 };
 
-var AVATARS={
-"INTJ":"🧠","INTP":"🔬","ENTJ":"👑","ENTP":"🎲",
-"INFJ":"🌙","INFP":"🦋","ENFJ":"☀️","ENFP":"🌈",
-"ISTJ":"📋","ISFJ":"🌸","ESTJ":"⚙️","ESFJ":"💝",
-"ISTP":"🔧","ISFP":"🎨","ESTP":"🔥","ESFP":"🎭"
-};
 
-var AVATARS2={
-"INTJ":"🦉","INTP":"🐙","ENTJ":"🦁","ENTP":"🦊",
-"INFJ":"🦢","INFP":"🐱","ENFJ":"🐕","ENFP":"🐬",
-"ISTJ":"🐝","ISFJ":"🦌","ESTJ":"🐂","ESFJ":"🐧",
-"ISTP":"🐺","ISFP":"🦜","ESTP":"🐯","ESFP":"🦩"
-};
-
-var AVATARS3={
-"INTJ":"◈","INTP":"◇","ENTJ":"Ψ","ENTP":"Δ",
-"INFJ":"☆","INFP":"♢","ENFJ":"◉","ENFP":"✦",
-"ISTJ":"▣","ISFJ":"❀","ESTJ":"⊞","ESFJ":"❤",
-"ISTP":"◆","ISFP":"✿","ESTP":"⚡","ESFP":"♪"
-};
 
 var ND={
 "INTJ":"你大概是一个很难被定义的人。\n\n在外人眼里，你是那个「冷静到有点可怕」的存在——脑子里永远有计划，说话永远有逻辑，做事永远有目的。但只有你自己知道，那些深夜里的反复推演、那些对人性复杂角落的洞察、那些对「意义」这件事近乎偏执的追问，都不是为了掌控什么，而是因为你真的很难忍受肤浅。\n\n你渴望被理解，但很难被说服。你的标准不是用来要求别人的，是用来要求自己的——可你也确实会用这个标准去丈量别人，然后在某个瞬间感到失望。这是你的温柔，也是你的残忍。\n\n你不太会表达情感。不是不会，是不知道怎么开口。所以你选择了沉默，用行动代替语言，用分析代替拥抱。这是你的方式，但偶尔，你也需要让自己被接住一次。\n\n你很罕见，也很珍贵。你的存在本身，就是对这个世界的一种抗议——抗议平庸，抗议敷衍，抗议一切不经过思考就交出的答案。你值得遇到一个能跟得上你节奏的人，也值得允许自己偶尔慢下来，感受一下这个世界除了「效率」以外的部分。\n\n学院归属是斯莱特林——你当然有野心，但你的野心从来不是碾压别人，而是证明给自己看：这个世界值得你认真对待，而你，配得上认真对待你的人。\n\n你的气质是粘液质，沉稳、冷静、不轻易动摇。这是你的铠甲，也是有时候让你显得遥远的原因。但那些真正走进你世界的人会发现，你的外壳之下，是一颗比谁都想被懂得的心。",
@@ -1101,8 +1076,7 @@ document.getElementById("goBtn").addEventListener("click",function(){
   result=calc();
   document.getElementById("badge").textContent=result.mbti;
   document.getElementById("nick").textContent=NK[result.mbti]||"";
-  document.getElementById("avStyleWrap").style.display="flex";
-  document.getElementById("av").textContent=AVATARS[result.mbti]||result.mbti.slice(0,2);
+  document.getElementById("av").src="avatars/"+result.mbti+".png";
   var houseText=result.house?"，学院归属"+result.house:"";
   var tempText=result.temp?"，气质类型"+result.temp:"";
   document.getElementById("shareTxt").textContent="我在「人格档案馆」测出了 "+result.mbti+"（"+(NK[result.mbti]||"")+"），九型"+result.en+"号"+houseText+tempText+"。作答效度："+result.validityScore+"%。";
@@ -1120,14 +1094,6 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   var modal = document.getElementById("imgModal");
   var canvas = document.getElementById("resultCanvas");
 
-  // 获取当前选中的头像风格
-  var currentAv = AVATARS[result.mbti] || result.mbti.slice(0,2);
-  var activeAvBtn = document.querySelector(".av-style.on");
-  if(activeAvBtn){
-    var s = activeAvBtn.getAttribute("data-s");
-    currentAv = (s==="2"?AVATARS2:s==="3"?AVATARS3:AVATARS)[result.mbti] || result.mbti.slice(0,2);
-  }
-
   // 创建离屏卡片
   var card = document.createElement("div");
   card.id = "genCard";
@@ -1141,7 +1107,7 @@ document.getElementById("copyBtn").addEventListener("click",function(){
       '<div style="font-size:.9rem;opacity:.8;letter-spacing:2px">✨ 人格档案馆 ✨</div>' +
     '</div>' +
     '<div style="text-align:center;margin-bottom:24px">' +
-      '<div id="genAvatar" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff">' + currentAv + '</div>' +
+      '<img src="avatars/'+result.mbti+'.png" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 12px;display:block">' +
       '<div style="font-size:2rem;font-weight:800;letter-spacing:4px">' + result.mbti + '</div>' +
       '<div style="font-size:1rem;opacity:.85;margin-top:4px">' + (NK[result.mbti] || "") + '</div>' +
     '</div>' +
@@ -1207,17 +1173,6 @@ document.getElementById("modalFwdBtn").addEventListener("click",function(){
   t.style.display = "block";
   setTimeout(function(){ t.style.display = "none"; }, 3000);
 });
-
-var avBtns=document.querySelectorAll(".av-style");
-for(var a=0;a<avBtns.length;a++){
-  avBtns[a].addEventListener("click",function(){
-    for(var b=0;b<avBtns.length;b++) avBtns[b].classList.remove("on");
-    this.classList.add("on");
-    var s=this.getAttribute("data-s");
-    var map=s==="2"?AVATARS2:s==="3"?AVATARS3:AVATARS;
-    document.getElementById("av").textContent=map[result.mbti]||result.mbti.slice(0,2);
-  });
-}
 
 document.getElementById("reBtn").addEventListener("click",function(){
   answers={};
