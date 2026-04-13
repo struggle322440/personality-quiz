@@ -43,9 +43,9 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .result{display:none;margin-top:24px}
 .result.show{display:block;animation:fadeUp .4s ease}
 .tabs{display:flex;gap:6px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;margin-bottom:16px;flex-wrap:wrap}
-.tab{background:none;border:none;font-size:.92rem;padding:6px 16px;border-radius:99px;color:#64748b;cursor:pointer;font-weight:500}
-.tab:hover{background:#f1f5f9}
-.tab.on{background:#4f46e5;color:#fff}
+.tab{background:none;border:1.5px solid #e2e8f0;font-size:.92rem;padding:6px 16px;border-radius:99px;color:#64748b;cursor:pointer;font-weight:500;transition:all .15s}
+.tab:hover{border-color:#4f46e5;color:#4f46e5}
+.tab.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
 .rbox{background:#f8fafc;border-radius:16px;padding:22px;border:1.5px solid #e2e8f0}
 .rhead{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
 .avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;font-weight:800;flex-shrink:0}
@@ -70,6 +70,20 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .btn-copy{background:#4f46e5}
 .btn-re{background:#64748b}
 .toast{font-size:.84rem;color:#10b981;margin-top:5px;display:none}
+.modal-mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;display:none;justify-content:center;align-items:center;flex-direction:column;padding:20px}
+.modal-mask.show{display:flex}
+.modal-img-wrap{max-width:375px;width:90vw;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.modal-img-wrap img{width:100%;display:block}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions button{padding:10px 24px;border-radius:99px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;color:#fff}
+.modal-btn-save{background:#4f46e5}
+.modal-btn-fwd{background:#10b981}
+.modal-btn-close{background:#64748b}
+.modal-hint{color:rgba(255,255,255,.7);font-size:.82rem;margin-top:12px;text-align:center}
+.av-style-wrap{display:flex;gap:4px}
+.av-style{padding:3px 10px;border-radius:99px;border:1px solid #e2e8f0;background:none;font-size:.75rem;cursor:pointer;color:#64748b;transition:all .15s}
+.av-style:hover{border-color:#4f46e5;color:#4f46e5}
+.av-style.on{background:#4f46e5;color:#fff;border-color:#4f46e5}
 .foot{margin-top:28px;text-align:center;color:#94a3b8;font-size:.78rem}
 @media(max-width:480px){body{padding:10px}.card{padding:16px 12px}.qcard{padding:12px 10px}.opt{padding:8px 10px;gap:8px}.rhead{flex-direction:column;align-items:flex-start}.avatar{width:56px;height:56px;font-size:1.3rem}.score-dim{grid-template-columns:1fr}}
 .result-card{background:#fff;border-radius:20px;padding:24px;text-align:center}
@@ -83,6 +97,7 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .result-card .qrcode img{width:100px;height:100px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -113,7 +128,14 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
     <div class="rbox">
       <div class="rhead">
         <div class="avatar" id="av">IN</div>
-        <div><div class="badge" id="badge">INTJ</div><div class="nick" id="nick">紫老头</div></div>
+        <div style="flex:1">
+          <div><div class="badge" id="badge">INTJ</div><div class="nick" id="nick">紫老头</div></div>
+          <div class="av-style-wrap" id="avStyleWrap" style="display:none;margin-top:8px">
+            <button class="av-style on" data-s="1">萌系</button>
+            <button class="av-style" data-s="2">动物</button>
+            <button class="av-style" data-s="3">符号</button>
+          </div>
+        </div>
       </div>
       <div class="rtxt" id="rtxt"></div>
       <div class="gift" id="gift"></div>
@@ -153,6 +175,15 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
   </div>
   <div class="foot">结果仅供参考 · 不构成任何诊断</div>
 </div>
+  <div class="modal-mask" id="imgModal">
+    <div class="modal-img-wrap"><canvas id="resultCanvas"></canvas></div>
+    <div class="modal-actions">
+      <button class="modal-btn-save" id="modalSaveBtn">长按保存图片</button>
+      <button class="modal-btn-fwd" id="modalFwdBtn">转发分享</button>
+      <button class="modal-btn-close" id="modalCloseBtn">关闭</button>
+    </div>
+    <div class="modal-hint">长按图片保存到相册 · 或截图转发给好友</div>
+  </div>
 <script>
 (function(){
 // ============================================================
@@ -699,6 +730,27 @@ var GM={
 "ESFP":"你本身就是光。别总是忙着照亮别人——转过身，你也在发光。"
 };
 
+var AVATARS={
+"INTJ":"🧠","INTP":"🔬","ENTJ":"👑","ENTP":"🎲",
+"INFJ":"🌙","INFP":"🦋","ENFJ":"☀️","ENFP":"🌈",
+"ISTJ":"📋","ISFJ":"🌸","ESTJ":"⚙️","ESFJ":"💝",
+"ISTP":"🔧","ISFP":"🎨","ESTP":"🔥","ESFP":"🎭"
+};
+
+var AVATARS2={
+"INTJ":"🦉","INTP":"🐙","ENTJ":"🦁","ENTP":"🦊",
+"INFJ":"🦢","INFP":"🐱","ENFJ":"🐕","ENFP":"🐬",
+"ISTJ":"🐝","ISFJ":"🦌","ESTJ":"🐂","ESFJ":"🐧",
+"ISTP":"🐺","ISFP":"🦜","ESTP":"🐯","ESFP":"🦩"
+};
+
+var AVATARS3={
+"INTJ":"◈","INTP":"◇","ENTJ":"Ψ","ENTP":"Δ",
+"INFJ":"☆","INFP":"♢","ENFJ":"◉","ENFP":"✦",
+"ISTJ":"▣","ISFJ":"❀","ESTJ":"⊞","ESFJ":"❤",
+"ISTP":"◆","ISFP":"✿","ESTP":"⚡","ESFP":"♪"
+};
+
 var ND={
 "INTJ":"你大概是一个很难被定义的人。\n\n在外人眼里，你是那个「冷静到有点可怕」的存在——脑子里永远有计划，说话永远有逻辑，做事永远有目的。但只有你自己知道，那些深夜里的反复推演、那些对人性复杂角落的洞察、那些对「意义」这件事近乎偏执的追问，都不是为了掌控什么，而是因为你真的很难忍受肤浅。\n\n你渴望被理解，但很难被说服。你的标准不是用来要求别人的，是用来要求自己的——可你也确实会用这个标准去丈量别人，然后在某个瞬间感到失望。这是你的温柔，也是你的残忍。\n\n你不太会表达情感。不是不会，是不知道怎么开口。所以你选择了沉默，用行动代替语言，用分析代替拥抱。这是你的方式，但偶尔，你也需要让自己被接住一次。\n\n你很罕见，也很珍贵。你的存在本身，就是对这个世界的一种抗议——抗议平庸，抗议敷衍，抗议一切不经过思考就交出的答案。你值得遇到一个能跟得上你节奏的人，也值得允许自己偶尔慢下来，感受一下这个世界除了「效率」以外的部分。\n\n学院归属是斯莱特林——你当然有野心，但你的野心从来不是碾压别人，而是证明给自己看：这个世界值得你认真对待，而你，配得上认真对待你的人。\n\n你的气质是粘液质，沉稳、冷静、不轻易动摇。这是你的铠甲，也是有时候让你显得遥远的原因。但那些真正走进你世界的人会发现，你的外壳之下，是一颗比谁都想被懂得的心。",
 "INTP":"你是一个脑子里住着整个宇宙的人。\n\n你喜欢思考，热爱逻辑，对这个世界有无数个「为什么」在脑子里同时运转。你的大脑是一座永不停歇的图书馆，哪怕在洗澡的时候也在自动推演各种可能性。你不是不说话，只是觉得很多话还没想清楚，说出来不如想进去。\n\n你不是社交达人，这是真的。但和你深度对话过的人，通常会对你念念不忘——因为你的脑子里真的有很多别人想不到的东西，那种「原来还可以这样想」的瞬间，往往发生在和你聊天之后。\n\n你有一种独特的温柔，是那种不会主动热情，但如果你真的需要帮助，会默默帮你把整个问题拆解清楚的人。你的好，是那种不会张扬的好。\n\n你习惯性地把情感那扇门关小一点，因为你觉得情感是混乱的、不可控的。但那不代表你没有——只是你选择让它住在更深的地方，等一个真正值得的人来敲门。\n\n你的内心世界很丰富，丰富到有时候自己都被自己的思维迷宫绕晕。但别忘了，外面的世界也在等你。偶尔出去走走，让别人看看你的宇宙，也不坏。\n\n学院归属是拉文克劳——对知识的渴望是你最真实的驱动力。而你的气质是抑郁质，那种细腻的、感受力很强的类型。你的敏感不是弱点，是你和这个世界之间最诚实的通道。",
@@ -1049,7 +1101,8 @@ document.getElementById("goBtn").addEventListener("click",function(){
   result=calc();
   document.getElementById("badge").textContent=result.mbti;
   document.getElementById("nick").textContent=NK[result.mbti]||"";
-  document.getElementById("av").textContent=result.mbti.slice(0,2);
+  document.getElementById("avStyleWrap").style.display="flex";
+  document.getElementById("av").textContent=AVATARS[result.mbti]||result.mbti.slice(0,2);
   var houseText=result.house?"，学院归属"+result.house:"";
   var tempText=result.temp?"，气质类型"+result.temp:"";
   document.getElementById("shareTxt").textContent="我在「人格档案馆」测出了 "+result.mbti+"（"+(NK[result.mbti]||"")+"），九型"+result.en+"号"+houseText+tempText+"。作答效度："+result.validityScore+"%。";
@@ -1064,57 +1117,107 @@ for(var i=0;i<tabs.length;i++){
 }
 
 document.getElementById("copyBtn").addEventListener("click",function(){
-  // 创建一个用于生成图片的临时容器
+  var modal = document.getElementById("imgModal");
+  var canvas = document.getElementById("resultCanvas");
+
+  // 获取当前选中的头像风格
+  var currentAv = AVATARS[result.mbti] || result.mbti.slice(0,2);
+  var activeAvBtn = document.querySelector(".av-style.on");
+  if(activeAvBtn){
+    var s = activeAvBtn.getAttribute("data-s");
+    currentAv = (s==="2"?AVATARS2:s==="3"?AVATARS3:AVATARS)[result.mbti] || result.mbti.slice(0,2);
+  }
+
+  // 创建离屏卡片
   var card = document.createElement("div");
-  card.className = "result-card";
-  card.style.cssText = "position:fixed;left:-9999px;max-width:375px;width:90vw;padding:28px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);";
+  card.id = "genCard";
+  card.style.cssText = "position:fixed;left:-9999px;max-width:375px;width:375px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:32px 24px;color:#fff;";
 
   var houseText = result.house ? result.house : "";
   var tempText = result.temp ? result.temp : "";
 
   card.innerHTML =
-    '<div class="logo">✨ 人格档案馆</div>' +
-    '<div class="mbti-type">' + result.mbti + '</div>' +
-    '<div class="mbti-name">' + (NK[result.mbti] || "") + '</div>' +
-    '<div style="margin:16px 0">' +
-      '<span class="tag-line">九型 ' + result.en + ' 号</span>' +
-      (houseText ? '<span class="tag-line">' + houseText + '</span>' : '') +
-      (tempText ? '<span class="tag-line">' + tempText + '</span>' : '') +
+    '<div style="text-align:center;margin-bottom:20px">' +
+      '<div style="font-size:.9rem;opacity:.8;letter-spacing:2px">✨ 人格档案馆 ✨</div>' +
     '</div>' +
-    '<div class="quote">「' + (GM[result.mbti] || "你值得一句专属赠言。") + '」</div>' +
-    '<div class="footer">扫码测测你的性格 →</div>' +
-    '<div style="margin-top:12px;color:#94a3b8;font-size:.7rem">结果仅供参考 · 不构成任何诊断</div>';
+    '<div style="text-align:center;margin-bottom:24px">' +
+      '<div id="genAvatar" style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff">' + currentAv + '</div>' +
+      '<div style="font-size:2rem;font-weight:800;letter-spacing:4px">' + result.mbti + '</div>' +
+      '<div style="font-size:1rem;opacity:.85;margin-top:4px">' + (NK[result.mbti] || "") + '</div>' +
+    '</div>' +
+    '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:20px">' +
+      '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">九型 ' + result.en + ' 号</span>' +
+      (houseText ? '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">' + houseText + '</span>' : '') +
+      (tempText ? '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">' + tempText + '</span>' : '') +
+    '</div>' +
+    '<div style="background:rgba(255,255,255,.12);border-radius:12px;padding:16px;font-size:.92rem;line-height:1.7;font-style:italic">「' + (GM[result.mbti] || "你值得一句专属赠言。") + '」</div>' +
+    '<div style="margin-top:24px;display:flex;flex-direction:column;align-items:center">' +
+      '<div id="qrPlaceholder" style="width:120px;height:120px;background:#fff;border-radius:12px;padding:8px"></div>' +
+      '<div style="font-size:.72rem;opacity:.7;margin-top:8px">扫码测测你的性格</div>' +
+    '</div>' +
+    '<div style="text-align:center;margin-top:16px;font-size:.65rem;opacity:.5">结果仅供参考 · 不构成任何诊断</div>';
 
   document.body.appendChild(card);
 
-  html2canvas(card, {
-    scale: 2,
-    backgroundColor: null,
-    useCORS: true,
-    windowWidth: 375
-  }).then(function(canvas) {
-    document.body.removeChild(card);
-
-    // 创建下载链接
-    var link = document.createElement("a");
-    link.download = "人格档案馆_" + result.mbti + ".png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-
-    // 显示提示
-    var t = document.getElementById("toast");
-    t.textContent = "图片已保存！";
-    t.style.display = "block";
-    setTimeout(function(){ t.style.display = "none"; }, 2000);
-  }).catch(function(err) {
-    document.body.removeChild(card);
-    console.error("生成图片失败:", err);
-    var t = document.getElementById("toast");
-    t.textContent = "生成失败，请重试";
-    t.style.display = "block";
-    setTimeout(function(){ t.style.display = "none"; }, 2000);
+  // 生成二维码
+  var qrDiv = document.getElementById("qrPlaceholder");
+  qrDiv.innerHTML = "";
+  new QRCode(qrDiv, {
+    text: "https://struggle322440.github.io/personality-quiz/",
+    width: 104,
+    height: 104,
+    colorDark: "#4f46e5",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
   });
+
+  // 等二维码渲染完成后截图
+  setTimeout(function(){
+    html2canvas(card, {
+      scale: 2,
+      backgroundColor: null,
+      useCORS: true,
+      windowWidth: 375
+    }).then(function(cvs){
+      canvas.width = cvs.width;
+      canvas.height = cvs.height;
+      canvas.getContext("2d").drawImage(cvs, 0, 0);
+      document.body.removeChild(card);
+      modal.classList.add("show");
+    }).catch(function(err){
+      document.body.removeChild(card);
+      console.error(err);
+      var t = document.getElementById("toast");
+      t.textContent = "生成失败，请重试";
+      t.style.display = "block";
+      setTimeout(function(){ t.style.display = "none"; }, 2000);
+    });
+  }, 500);
 });
+
+document.getElementById("modalCloseBtn").addEventListener("click",function(){
+  document.getElementById("imgModal").classList.remove("show");
+});
+document.getElementById("imgModal").addEventListener("click",function(e){
+  if(e.target===this) this.classList.remove("show");
+});
+document.getElementById("modalFwdBtn").addEventListener("click",function(){
+  var t = document.getElementById("toast");
+  t.textContent = "请截图后转发给好友~";
+  t.style.display = "block";
+  setTimeout(function(){ t.style.display = "none"; }, 3000);
+});
+
+var avBtns=document.querySelectorAll(".av-style");
+for(var a=0;a<avBtns.length;a++){
+  avBtns[a].addEventListener("click",function(){
+    for(var b=0;b<avBtns.length;b++) avBtns[b].classList.remove("on");
+    this.classList.add("on");
+    var s=this.getAttribute("data-s");
+    var map=s==="2"?AVATARS2:s==="3"?AVATARS3:AVATARS;
+    document.getElementById("av").textContent=map[result.mbti]||result.mbti.slice(0,2);
+  });
+}
 
 document.getElementById("reBtn").addEventListener("click",function(){
   answers={};
