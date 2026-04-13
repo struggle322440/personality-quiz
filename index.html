@@ -1099,8 +1099,8 @@ function showDimBars(r){
 function showTab(tid){
   if(!result)return;
   var isN=tid==="nice",isD=tid==="scores",isA=tid==="advice";
-  document.getElementById("rtxt").style.display=isD||isA?"none":"block";
-  document.getElementById("gift").style.display=isD||isA?"none":"block";
+  document.getElementById("rtxt").style.display=isD?"none":"block";
+  document.getElementById("gift").style.display=isD?"none":"block";
   document.getElementById("scoreDim").style.display=isD?"grid":"none";
 
   if(isA){
