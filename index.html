@@ -75,11 +75,6 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .modal-mask.show{display:flex}
 .modal-img-wrap{max-width:375px;width:90vw;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.2)}
 .modal-img-wrap img{width:100%;height:auto;display:block}
-.modal-actions{display:flex;gap:10px;margin-top:16px}
-.modal-actions button{padding:10px 24px;border-radius:99px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;color:#fff}
-.modal-btn-save{background:#4f46e5}
-.modal-btn-fwd{background:#10b981}
-.modal-btn-close{background:#64748b}
 .modal-hint{color:rgba(255,255,255,.7);font-size:.82rem;margin-top:12px;text-align:center}
 
 .foot{margin-top:28px;text-align:center;color:#94a3b8;font-size:.78rem}
@@ -191,12 +186,7 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 </div>
   <div class="modal-mask" id="imgModal">
     <div class="modal-img-wrap"><img id="resultImg" src="" alt="测试结果"></div>
-    <div class="modal-actions">
-      <button class="modal-btn-save" id="modalSaveBtn">长按保存图片</button>
-      <button class="modal-btn-fwd" id="modalFwdBtn">转发分享</button>
-      <button class="modal-btn-close" id="modalCloseBtn">关闭</button>
-    </div>
-    <div class="modal-hint">长按图片保存到相册 · 或截图转发给好友</div>
+    <div class="modal-hint">长按图片保存到相册</div>
   </div>
 <script>
 (function(){
@@ -1158,34 +1148,49 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   var modal = document.getElementById("imgModal");
   var resultImg = document.getElementById("resultImg");
 
-  // 创建离屏卡片
-  var card = document.createElement("div");
-  card.id = "genCard";
-  card.style.cssText = "position:fixed;left:-9999px;max-width:375px;width:375px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:32px 24px;color:#fff;";
-
   var houseText = result.house ? result.house : "";
   var tempText = result.temp ? result.temp : "";
 
+  // 计算更多维度结果
+  var machLabel = result.machScore > result.altruScore ? "马基雅维利型" : "利他型";
+  var attachLabel = "安全型";
+  if(result.anxScore > 3 && result.avoScore <= 1) attachLabel = "焦虑型";
+  else if(result.avoScore > 3 && result.anxScore <= 1) attachLabel = "回避型";
+  else if(result.anxScore > 2 && result.avoScore > 2) attachLabel = "恐惧型";
+
+  // 创建离屏卡片
+  var card = document.createElement("div");
+  card.id = "genCard";
+  card.style.cssText = "position:fixed;left:-9999px;width:375px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:28px 20px;color:#fff;";
+
   card.innerHTML =
-    '<div style="text-align:center;margin-bottom:20px">' +
-      '<div style="font-size:.9rem;opacity:.8;letter-spacing:2px">✨ 人格档案馆 ✨</div>' +
+    '<div style="text-align:center;margin-bottom:16px;font-size:.85rem;opacity:.85;letter-spacing:2px">✨ 人格档案馆 ✨</div>' +
+    // 上半部分：左头像右信息（参考页面排版）
+    '<div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">' +
+      '<img src="avatars/'+result.mbti+'.png" style="width:100px;height:100px;border-radius:50%;object-fit:cover;flex-shrink:0">' +
+      '<div style="flex:1">' +
+        '<div style="font-size:2.2rem;font-weight:800;letter-spacing:3px">'+result.mbti+'</div>' +
+        '<div style="font-size:1rem;opacity:.85;margin-top:4px">'+(NK[result.mbti] || "")+'</div>' +
+      '</div>' +
     '</div>' +
-    '<div style="text-align:center;margin-bottom:24px">' +
-      '<img src="avatars/'+result.mbti+'.png" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 12px;display:block">' +
-      '<div style="font-size:2rem;font-weight:800;letter-spacing:4px">' + result.mbti + '</div>' +
-      '<div style="font-size:1rem;opacity:.85;margin-top:4px">' + (NK[result.mbti] || "") + '</div>' +
+    // 标签区（左对齐，放更多结果）
+    '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">' +
+      '<span style="background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem">九型 '+result.en+' 号</span>' +
+      (houseText ? '<span style="background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem">'+houseText+'</span>' : '') +
+      (tempText ? '<span style="background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem">'+tempText+'</span>' : '') +
+      '<span style="background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem">'+attachLabel+'</span>' +
+      '<span style="background:rgba(255,255,255,.2);padding:4px 12px;border-radius:99px;font-size:.8rem">'+machLabel+'</span>' +
     '</div>' +
-    '<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:20px">' +
-      '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">九型 ' + result.en + ' 号</span>' +
-      (houseText ? '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">' + houseText + '</span>' : '') +
-      (tempText ? '<span style="background:rgba(255,255,255,.2);padding:5px 14px;border-radius:99px;font-size:.85rem">' + tempText + '</span>' : '') +
+    // 赠言
+    '<div style="background:rgba(255,255,255,.12);border-radius:10px;padding:14px;font-size:.88rem;line-height:1.6;font-style:italic;margin-bottom:16px">「'+(GM[result.mbti] || "你值得一句专属赠言。")+'」</div>' +
+    // 底部：左空白右二维码
+    '<div style="display:flex;justify-content:flex-end;align-items:center">' +
+      '<div>' +
+        '<div id="qrPlaceholder" style="width:88px;height:88px;background:#fff;border-radius:8px;padding:6px"></div>' +
+        '<div style="font-size:.65rem;opacity:.6;margin-top:4px;text-align:center">扫码测试</div>' +
+      '</div>' +
     '</div>' +
-    '<div style="background:rgba(255,255,255,.12);border-radius:12px;padding:16px;font-size:.92rem;line-height:1.7;font-style:italic">「' + (GM[result.mbti] || "你值得一句专属赠言。") + '」</div>' +
-    '<div style="margin-top:24px;display:flex;flex-direction:column;align-items:center">' +
-      '<div id="qrPlaceholder" style="width:120px;height:120px;background:#fff;border-radius:12px;padding:8px"></div>' +
-      '<div style="font-size:.72rem;opacity:.7;margin-top:8px">扫码测测你的性格</div>' +
-    '</div>' +
-    '<div style="text-align:center;margin-top:16px;font-size:.65rem;opacity:.5">结果仅供参考 · 不构成任何诊断</div>';
+    '<div style="text-align:center;margin-top:12px;font-size:.6rem;opacity:.4">结果仅供参考 · 不构成任何诊断</div>';
 
   document.body.appendChild(card);
 
@@ -1194,8 +1199,8 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   qrDiv.innerHTML = "";
   new QRCode(qrDiv, {
     text: "https://struggle322440.github.io/personality-quiz/",
-    width: 104,
-    height: 104,
+    width: 76,
+    height: 76,
     colorDark: "#4f46e5",
     colorLight: "#ffffff",
     correctLevel: QRCode.CorrectLevel.M
@@ -1223,17 +1228,8 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   }, 500);
 });
 
-document.getElementById("modalCloseBtn").addEventListener("click",function(){
-  document.getElementById("imgModal").classList.remove("show");
-});
 document.getElementById("imgModal").addEventListener("click",function(e){
   if(e.target===this) this.classList.remove("show");
-});
-document.getElementById("modalFwdBtn").addEventListener("click",function(){
-  var t = document.getElementById("toast");
-  t.textContent = "请截图后转发给好友~";
-  t.style.display = "block";
-  setTimeout(function(){ t.style.display = "none"; }, 3000);
 });
 
 document.getElementById("reBtn").addEventListener("click",function(){
