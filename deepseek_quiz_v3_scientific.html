@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人格档案馆 · 多维深度测试</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f0f1f5;color:#1e293b;line-height:1.6;min-height:100vh;padding:16px}
+.wrap{max-width:820px;margin:0 auto}
+.card{background:#fff;border-radius:20px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:28px 24px;margin-bottom:16px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadeUp .35s ease}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.9rem;color:#64748b;font-weight:500}
+.bar-bg{background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:width .4s}
+h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
+.sub{font-size:.85rem;color:#64748b}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.ver-ctrl{display:flex;align-items:center;gap:8px;background:#f1f5f9;padding:6px 14px;border-radius:99px}
+.ver-ctrl select{padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;font-size:.88rem;cursor:pointer}
+.ver-ctrl button{background:#4f46e5;color:#fff;border:none;padding:5px 14px;border-radius:20px;font-size:.88rem;cursor:pointer}
+.ver-ctrl button:hover{background:#4338ca}
+.warn{background:#fef9c3;color:#854d0e;padding:10px 14px;border-radius:12px;font-size:.86rem;margin-bottom:18px;border-left:4px solid #f59e0b}
+.qcard{background:#f8fafc;border-radius:16px;padding:16px 18px;margin-bottom:12px;border:1.5px solid #e2e8f0;transition:border-color .15s}
+.qcard:hover{border-color:#c7d2fe}
+.qnum{font-size:.78rem;color:#94a3b8;margin-bottom:4px;font-weight:600;display:flex;align-items:center;gap:6px}
+.tag{display:inline-block;font-size:.65rem;padding:1px 7px;border-radius:99px;font-weight:600}
+.tag.valid{background:#fef3c7;color:#92400e}
+.tag.lie{background:#fee2e2;color:#991b1b}
+.tag.comp{background:#dbeafe;color:#1e40af}
+.qtxt{font-weight:600;margin-bottom:12px;font-size:1rem;color:#0f172a}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e2e8f0;cursor:pointer;transition:all .15s;min-height:44px}
+.opt:hover{border-color:#4f46e5;background:#eef2ff}
+.opt.sel{border-color:#4f46e5;background:#e0e7ff}
+.opt input[type=radio]{accent-color:#4f46e5;width:17px;height:17px;flex-shrink:0;cursor:pointer}
+.opt label{cursor:pointer;font-size:.94rem;color:#1e293b;flex:1}
+.opt.sel label{color:#4338ca;font-weight:500}
+.btn-go{width:100%;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;font-weight:700;font-size:1.1rem;padding:15px;border:none;border-radius:99px;margin-top:24px;cursor:pointer;box-shadow:0 4px 16px rgba(79,70,229,.3);transition:all .15s}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,70,229,.4)}
+.err{color:#dc2626;font-size:.88rem;text-align:center;margin-top:10px;min-height:22px}
+.result{display:none;margin-top:24px}
+.result.show{display:block;animation:fadeUp .4s ease}
+.tabs{display:flex;gap:6px;border-bottom:2px solid #e2e8f0;padding-bottom:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{background:none;border:none;font-size:.92rem;padding:6px 16px;border-radius:99px;color:#64748b;cursor:pointer;font-weight:500}
+.tab:hover{background:#f1f5f9}
+.tab.on{background:#4f46e5;color:#fff}
+.rbox{background:#f8fafc;border-radius:16px;padding:22px;border:1.5px solid #e2e8f0}
+.rhead{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.6rem;font-weight:800;flex-shrink:0}
+.badge{background:#4f46e5;color:#fff;font-weight:700;font-size:1.3rem;padding:5px 16px;border-radius:99px}
+.nick{font-size:1.05rem;color:#64748b;font-weight:500}
+.rtxt{white-space:pre-line;line-height:1.8;color:#334155;margin:14px 0;font-size:.98rem}
+.gift{margin-top:18px;padding-top:16px;border-top:2px dashed #e2e8f0;font-size:1rem;font-weight:600;color:#7c3aed;font-style:italic}
+.vtip{font-size:.8rem;margin-top:12px;color:#94a3b8}
+.vwarn{margin-top:10px;padding:10px 14px;background:#fef3c7;border-radius:10px;font-size:.82rem;color:#92400e;display:none}
+.vwarn.show{display:block}
+.score-dim{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.dim-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px}
+.dim-name{font-size:.75rem;color:#94a3b8;font-weight:600;margin-bottom:4px}
+.dim-bar{background:#e2e8f0;border-radius:99px;height:8px;overflow:hidden;margin-bottom:4px}
+.dim-fill{height:100%;border-radius:99px;transition:width .6s}
+.dim-label{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700}
+.share{margin-top:18px;padding:14px;background:#f0f1f5;border-radius:12px}
+.share p{font-size:.84rem;color:#64748b;margin-bottom:8px;white-space:pre-line}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;color:#fff;border:none;padding:7px 18px;border-radius:99px;font-size:.88rem;cursor:pointer;transition:all .15s}
+.btn:hover{opacity:.9}
+.btn-copy{background:#4f46e5}
+.btn-re{background:#64748b}
+.toast{font-size:.84rem;color:#10b981;margin-top:5px;display:none}
+.foot{margin-top:28px;text-align:center;color:#94a3b8;font-size:.78rem}
+@media(max-width:480px){body{padding:10px}.card{padding:16px 12px}.qcard{padding:12px 10px}.opt{padding:8px 10px;gap:8px}.rhead{flex-direction:column;align-items:flex-start}.avatar{width:56px;height:56px;font-size:1.3rem}.score-dim{grid-template-columns:1fr}}
+.result-card{background:#fff;border-radius:20px;padding:24px;text-align:center}
+.result-card .logo{font-size:1.2rem;font-weight:700;color:#4f46e5;margin-bottom:16px}
+.result-card .mbti-type{font-size:2.5rem;font-weight:800;color:#0f172a;margin:12px 0}
+.result-card .mbti-name{font-size:1.1rem;color:#64748b;margin-bottom:16px}
+.result-card .tag-line{display:inline-block;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:6px 16px;border-radius:99px;font-size:.9rem;margin:8px 4px}
+.result-card .quote{font-style:italic;color:#7c3aed;margin-top:16px;padding:12px;border-left:3px solid #7c3aed;text-align:left;font-size:.95rem}
+.result-card .footer{margin-top:20px;font-size:.75rem;color:#94a3b8}
+.result-card .qrcode{text-align:center;margin-top:16px}
+.result-card .qrcode img{width:100px;height:100px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="progress-top"><span id="ptxt">第 1 题 / 共 75 题</span><span id="ppct">0%</span></div>
+    <div class="bar-bg"><div class="bar-fill" id="pbar" style="width:0"></div></div>
+  </div>
+  <div class="card">
+    <div class="top-bar">
+      <div><h1>人格档案馆</h1><div class="sub">多维深度测试 · 暗中校验</div></div>
+      <div class="ver-ctrl">
+        <select id="verSel"><option value="40">40题精简</option><option value="75" selected>75题完整</option></select>
+        <button id="verBtn">切换</button>
+      </div>
+    </div>
+    <div class="warn">请选择你「大概率会做的真实反应」，而非「你认为更体面的答案」。部分题目为一致性检验题，不会影响最终结果。</div>
+    <div id="qBox"></div>
+    <button class="btn-go" id="goBtn">一键免费生成报告</button>
+    <div class="err" id="errMsg"></div>
+  </div>
+  <div class="card result" id="resArea">
+    <div class="tabs">
+      <button class="tab on" data-t="nice">温柔滤镜</button>
+      <button class="tab" data-t="truth">毒舌锐评</button>
+      <button class="tab" data-t="scores">维度解读</button>
+    </div>
+    <div class="rbox">
+      <div class="rhead">
+        <div class="avatar" id="av">IN</div>
+        <div><div class="badge" id="badge">INTJ</div><div class="nick" id="nick">紫老头</div></div>
+      </div>
+      <div class="rtxt" id="rtxt"></div>
+      <div class="gift" id="gift"></div>
+      <div class="vtip" id="vtip"></div>
+      <div class="score-dim" id="scoreDim" style="display:none">
+        <div class="dim-card">
+          <div class="dim-name">外向 E — 内向 I</div>
+          <div class="dim-bar"><div class="dim-fill" id="dimEI" style="width:50%;background:linear-gradient(90deg,#4f46e5,#8b5cf6)"></div></div>
+          <div class="dim-label"><span id="dimEIL">I 偏向</span><span id="dimEIpct">50%</span></div>
+        </div>
+        <div class="dim-card">
+          <div class="dim-name">实感 S — 直觉 N</div>
+          <div class="dim-bar"><div class="dim-fill" id="dimSN" style="width:50%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+          <div class="dim-label"><span id="dimSNL">N 偏向</span><span id="dimSNpct">50%</span></div>
+        </div>
+        <div class="dim-card">
+          <div class="dim-name">思考 T — 情感 F</div>
+          <div class="dim-bar"><div class="dim-fill" id="dimTF" style="width:50%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+          <div class="dim-label"><span id="dimTFL">T 偏向</span><span id="dimTFpct">50%</span></div>
+        </div>
+        <div class="dim-card">
+          <div class="dim-name">判断 J — 感知 P</div>
+          <div class="dim-bar"><div class="dim-fill" id="dimJP" style="width:50%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+          <div class="dim-label"><span id="dimJPL">J 偏向</span><span id="dimJPpct">50%</span></div>
+        </div>
+      </div>
+      <div class="vwarn" id="vwarn"></div>
+      <div class="share">
+        <p id="shareTxt"></p>
+        <div class="btns">
+          <button class="btn btn-copy" id="copyBtn">生成结果图片</button>
+          <button class="btn btn-re" id="reBtn">重新测试</button>
+        </div>
+        <div class="toast" id="toast">图片已生成！</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">结果仅供参考 · 不构成任何诊断</div>
+</div>
+<script>
+(function(){
+// ============================================================
+// 【第一部分：题目设计 · 科学版】
+// ============================================================
+// 每题结构：
+//   id: 唯一标识
+//   q: 题目文字
+//   type: normal | consistency | lie | socialDesirability
+//   group: 该题隶属于哪个心理构念（如EI, SN, TF, JP）
+//   reverse: false | true（是否反向计分，用于检测一致性）
+//   weight: 题目区分度权重（0.5-1.5，影响最终分数权重）
+//   ops: 选项
+//     t: 选项文本
+//     score: {维度名: 分值} — 分值范围 [-2, -1, 0, 1, 2] 标准化
+//     isDecoy: 该选项是否为"社会赞许诱饵"（专门引诱虚假作答）
+// ============================================================
+
+var QUESTIONS={
+"40":[
+  // ---- E/I 维度 ----
+  {id:"ei1",q:"周末晚上，你最理想的状态是：",type:"normal",group:"EI",weight:1.3,ops:[
+    {t:"呼朋引伴去热闹的地方，结束后意犹未尽",score:{E:2,I:-2},isDecoy:false},
+    {t:"和一两个聊得来的朋友小聚，之后各自回家",score:{E:1,I:-1},isDecoy:false},
+    {t:"在家安静地看电影/看书/做自己的事，充电完毕",score:{E:-2,I:2},isDecoy:false},
+    {t:"一个人出门散步，走到哪里算哪里，享受独处",score:{E:-1,I:1},isDecoy:false}
+  ]},
+  {id:"ei2",q:"你在一个全是陌生人的社交场合，通常会：",type:"normal",group:"EI",weight:1.2,ops:[
+    {t:"主动和周围人攀谈，转换话题也不在话下",score:{E:2,I:-2},isDecoy:false},
+    {t:"等有人来和我说话，我再自然地接话",score:{E:1,I:-1},isDecoy:false},
+    {t:"观察全场，找到最有意思的那个人主动接近",score:{E:1,I:0},isDecoy:false},
+    {t:"安静地待着，偶尔回应一下，保持自己的节奏",score:{E:-2,I:2},isDecoy:false}
+  ]},
+  {id:"ei3",q:"如果可以选择，你更愿意花时间在：",type:"normal",group:"EI",weight:1.1,ops:[
+    {t:"和各种人深度交流，探索不同的想法",score:{E:2,I:-1},isDecoy:false},
+    {t:"安静地独处，和自己对话或者做创造性的事",score:{E:-2,I:2},isDecoy:false},
+    {t:"和固定的朋友一起做事，有默契不尴尬",score:{E:0,I:1},isDecoy:false},
+    {t:"其实都行，看心情",score:{E:0,I:0},isDecoy:false}
+  ]},
+  {id:"ei4",q:"有人说「你最近好像消失了」，你的真实情况更可能是：",type:"consistency",group:"EI",weight:1.4,ops:[
+    {t:"确实在忙，忙的时候会自动减少社交",score:{I:2},isDecoy:false},
+    {t:"没有消失，只是没有主动联系对方而已",score:{I:1},isDecoy:false},
+    {t:"一直在刷群聊/看朋友圈，只是没说话",score:{I:1},isDecoy:false},
+    {t:"其实是因为情绪不好在自我消化，没跟任何人说",score:{I:2},isDecoy:false}
+  ]},
+  {id:"ei5",q:"你更认同哪种说法？",type:"normal",group:"EI",weight:1.0,ops:[
+    {t:"和朋友面对面聊天，是最有效的情感连接方式",score:{E:2},isDecoy:false},
+    {t:"情感连接可以有很多形式，不一定需要面对面",score:{I:1},isDecoy:false},
+    {t:"独处是给自己充电，面对面社交是消耗",score:{I:2},isDecoy:false},
+    {t:"我不觉得两者有明显区别",score:{I:0},isDecoy:false}
+  ]},
+  {id:"ei6",q:"你独处时看手机的频率大概是：",type:"normal",group:"EI",weight:1.2,ops:[
+    {t:"几乎不看，能完全沉浸在自己的事情里",score:{I:2},isDecoy:false},
+    {t:"偶尔看一下，主要是切歌或查资料",score:{I:1},isDecoy:false},
+    {t:"经常无意识地解锁屏幕，其实没什么消息",score:{E:1},isDecoy:false},
+    {t:"手机必须放在能看到的地方，不然总觉得错过了什么",score:{E:2},isDecoy:false}
+  ]},
+  // 反向题（与ei1方向相反）
+  {id:"ei7r",q:"「社交是生活的调味剂，独处才是正餐」——你对此：",type:"consistency",group:"EI",weight:1.5,ops:[
+    {t:"非常认同，独处让我感到完整",score:{I:2},isDecoy:false},
+    {t:"有点认同，但偶尔也想出去热闹一下",score:{I:1},isDecoy:false},
+    {t:"不太认同，没有人陪我会觉得无聊",score:{E:1},isDecoy:false},
+    {t:"完全不认同，我需要不断地和人互动来感受活力",score:{E:2},isDecoy:false}
+  ]},
+  {id:"ei8",q:"你最容易在哪种情境下感到疲惫？",type:"normal",group:"EI",weight:1.3,ops:[
+    {t:"长时间处于嘈杂、人多的环境里",score:{I:2},isDecoy:false},
+    {t:"长时间一个人待着，没有人可以说话",score:{E:2},isDecoy:false},
+    {t:"和人进行肤浅的寒暄，没有真正的交流",score:{I:1},isDecoy:false},
+    {t:"我不太会因为社交环境而感到累",score:{E:0,I:0},isDecoy:false}
+  ]},
+  // ---- S/N 维度 ----
+  {id:"sn1",q:"你描述事情的时候，更习惯用：",type:"normal",group:"SN",weight:1.2,ops:[
+    {t:"具体的数字、事实、时间线，精确描述",score:{S:2,N:-1},isDecoy:false},
+    {t:"比喻、感觉、整体印象，大概的方向",score:{S:-1,N:2},isDecoy:false},
+    {t:"两者结合，看情况决定",score:{S:1,N:1},isDecoy:false},
+    {t:"不太注意自己用什么方式，自然而然",score:{S:0,N:0},isDecoy:false}
+  ]},
+  {id:"sn2",q:"当有人说「我觉得这件事可能会往一个很有意思的方向发展」时，你的反应通常是：",type:"normal",group:"SN",weight:1.3,ops:[
+    {t:"追问：什么方向？依据是什么？",score:{S:2,N:-1},isDecoy:false},
+    {t:"兴奋起来：真的吗？说说看！",score:{S:-1,N:2},isDecoy:false},
+    {t:"先想想这在现实中可不可行",score:{S:2,N:-2},isDecoy:false},
+    {t:"嗯嗯，然后等他继续说",score:{S:0,N:1},isDecoy:false}
+  ]},
+  {id:"sn3",q:"你更容易被什么吸引？",type:"normal",group:"SN",weight:1.1,ops:[
+    {t:"具体的应用、实际的效果、能解决什么问题",score:{S:2},isDecoy:false},
+    {t:"背后的原理、规律、为什么是这样",score:{N:1},isDecoy:false},
+    {t:"新的可能性、还没发生的事情、想象空间",score:{N:2},isDecoy:false},
+    {t:"这件事本身美不美，有没有意思",score:{N:1},isDecoy:false}
+  ]},
+  {id:"sn4",q:"朋友描述一件事用了模糊的时间词（比如「前一阵子」「有一段时间」），你会：",type:"consistency",group:"SN",weight:1.4,ops:[
+    {t:"完全不在意，知道大概就行",score:{N:1,P:1},isDecoy:false},
+    {t:"心里会嘀咕：到底是哪天？",score:{S:2,J:1},isDecoy:false},
+    {t:"会追问具体时间，因为这影响我对事情性质的判断",score:{S:2,T:1},isDecoy:false},
+    {t:"注意到但不会问，显得太较真",score:{F:1},isDecoy:false}
+  ]},
+  {id:"sn5",q:"你更享受哪种探索方式？",type:"normal",group:"SN",weight:1.0,ops:[
+    {t:"深入研究一个已知的领域，把它搞透",score:{S:2},isDecoy:false},
+    {t:"不断发现新的领域，浅尝辄止也很有趣",score:{N:2},isDecoy:false},
+    {t:"先广后深，先了解大概再决定要不要深入",score:{N:1,S:1},isDecoy:false},
+    {t:"深浅交替，看心情",score:{N:0,S:0},isDecoy:false}
+  ]},
+  {id:"sn6",q:"你更在意什么？",type:"normal",group:"SN",weight:1.2,ops:[
+    {t:"这件事的逻辑是否严密，结论是否有依据",score:{S:1,T:1},isDecoy:false},
+    {t:"这件事背后的意义和可能性",score:{N:2},isDecoy:false},
+    {t:"这件事能不能落地执行，效果如何",score:{S:2},isDecoy:false},
+    {t:"这件事符不符合我的价值观和审美",score:{N:1,F:1},isDecoy:false}
+  ]},
+  // 反向题
+  {id:"sn7r",q:"「细节决定成败」这句话，你怎么看？",type:"consistency",group:"SN",weight:1.5,ops:[
+    {t:"非常认同，不注意细节一定会出问题",score:{S:2,J:1},isDecoy:false},
+    {t:"方向对了细节才有意义，方向不对再细也没用",score:{N:2},isDecoy:false},
+    {t:"细节重要，但不是最重要的",score:{S:1},isDecoy:false},
+    {t:"我经常注意不到细节，但我会努力改",score:{S:0},isDecoy:true}
+  ]},
+  {id:"sn8",q:"你更倾向于哪种学习方式？",type:"normal",group:"SN",weight:1.1,ops:[
+    {t:"先看完整教材，搞清框架再动手",score:{J:2,S:1},isDecoy:false},
+    {t:"直接上手，边做边学，遇到问题再查",score:{P:2,N:1},isDecoy:false},
+    {t:"先问清楚核心原理，然后自己探索",score:{N:2},isDecoy:false},
+    {t:"看看做这个能有什么用，有用才学",score:{S:2},isDecoy:false}
+  ]},
+  // ---- T/F 维度 ----
+  {id:"tf1",q:"朋友向你倾诉工作很累，你的反应通常是：",type:"normal",group:"TF",weight:1.3,ops:[
+    {t:"「要不要帮你分析一下，看哪里可以调整？」",score:{T:2,N:1},isDecoy:false},
+    {t:"「抱抱，辛苦了，周末带你去吃好的。」",score:{F:2},isDecoy:false},
+    {t:"「我最近也很累啊。」（开始讲自己的事）",score:{T:1,F:-1},isDecoy:false},
+    {t:"认真倾听，然后问：「你需要我做什么？」",score:{F:1,T:1},isDecoy:false}
+  ]},
+  {id:"tf2",q:"当别人说了一个你不同意但也无害的观点时，你会：",type:"normal",group:"TF",weight:1.2,ops:[
+    {t:"直接指出问题，说明为什么不对",score:{T:2},isDecoy:false},
+    {t:"不反驳，但会在心里记下这个人的水平",score:{T:1},isDecoy:false},
+    {t:"尊重差异，不一定要统一意见",score:{F:1},isDecoy:false},
+    {t:"听听他的理由，也许我没想到那个角度",score:{N:1,F:1},isDecoy:false}
+  ]},
+  {id:"tf3",q:"你更讨厌哪种表达？",type:"normal",group:"TF",weight:1.1,ops:[
+    {t:"只说结论不给依据，「就是这样，听我的」",score:{T:2,J:1},isDecoy:false},
+    {t:"啰嗦半天说不到重点，不知道在讲什么",score:{J:1},isDecoy:false},
+    {t:"用一堆抽象大词包装一个简单的事情",score:{S:1},isDecoy:false},
+    {t:"明明错了还特别笃定，不接受反驳",score:{T:2},isDecoy:false}
+  ]},
+  {id:"tf4",q:"你在朋友圈发了一条动态，你更在意：",type:"normal",group:"TF",weight:1.0,ops:[
+    {t:"有没有人点赞，点赞数是不是够多",score:{E:1},isDecoy:true},
+    {t:"有没有人认真评论，评论了什么",score:{E:1,F:1},isDecoy:false},
+    {t:"我只是在记录生活，不在意别人怎么看",score:{I:1},isDecoy:false},
+    {t:"希望有人理解我想表达的东西",score:{F:2},isDecoy:false}
+  ]},
+  {id:"tf5",q:"同事在群里发了一个方案，你明显发现有漏洞，你会：",type:"consistency",group:"TF",weight:1.5,ops:[
+    {t:"私下小窗他，给足面子，问题单独说",score:{F:2},isDecoy:false},
+    {t:"直接在群里指出：逻辑上有问题",score:{T:2,Gryffindor:2},isDecoy:false},
+    {t:"不说，不是我的责任",score:{P:1},isDecoy:false},
+    {t:"先肯定，再说「补充一点思路」",score:{Slytherin:3},isDecoy:false}
+  ]},
+  {id:"tf6",q:"你如何看待「善意的谎言」？",type:"normal",group:"TF",weight:1.2,ops:[
+    {t:"可以接受，关系比真相重要",score:{F:2},isDecoy:false},
+    {t:"尽量不说，但如果不说会伤害对方，就说",score:{F:1,T:1},isDecoy:false},
+    {t:"谎言就是谎言，善意只是借口",score:{T:2},isDecoy:false},
+    {t:"看对谁，对真正重要的人不说谎",score:{F:1},isDecoy:false}
+  ]},
+  {id:"tf7",q:"你犯错后第一反应通常是：",type:"normal",group:"TF",weight:1.1,ops:[
+    {t:"立刻承认并想办法补救",score:{J:1},isDecoy:false},
+    {t:"先在脑子里过一遍：有没有人发现？",score:{T:1},isDecoy:false},
+    {t:"找原因：信息不足/时间紧/对方没说清楚",score:{T:1},isDecoy:false},
+    {t:"沉默，等这件事过去",score:{P:1},isDecoy:false}
+  ]},
+  {id:"tf8",q:"你更容易被什么打动？",type:"normal",group:"TF",weight:1.0,ops:[
+    {t:"一个严密的逻辑推演，一个完美的证明",score:{T:2},isDecoy:false},
+    {t:"一个感人的故事，一个触动人心的人",score:{F:2},isDecoy:false},
+    {t:"一个出人意料的创意，一个全新的视角",score:{N:2},isDecoy:false},
+    {t:"一个真实的数据，一个可验证的事实",score:{S:2},isDecoy:false}
+  ]},
+  // ---- J/P 维度 ----
+  {id:"jp1",q:"出行前一晚，你的状态通常是：",type:"normal",group:"JP",weight:1.3,ops:[
+    {t:"行李早就收好了，最后再检查一遍清单",score:{J:3},isDecoy:false},
+    {t:"深夜才开始收，边收边焦虑有没有落下什么",score:{P:2,J:1},isDecoy:false},
+    {t:"随便扔几件衣服，相信什么都能买到",score:{P:3},isDecoy:false},
+    {t:"大致有个谱，最后几小时搞定",score:{J:1,P:1},isDecoy:false}
+  ]},
+  {id:"jp2",q:"你通常如何做旅行/活动计划？",type:"normal",group:"JP",weight:1.2,ops:[
+    {t:"做详细到小时/每天的Excel表，精确规划",score:{J:3},isDecoy:false},
+    {t:"只定框架：机酒+几个必去点，剩下随缘",score:{J:1,P:1},isDecoy:false},
+    {t:"完全不做，到了再说，见机行事",score:{P:3},isDecoy:false},
+    {t:"让别人做攻略，我跟着走就行",score:{P:2},isDecoy:false}
+  ]},
+  {id:"jp3",q:"你在工作中更倾向于：",type:"normal",group:"JP",weight:1.1,ops:[
+    {t:"先定计划再开工，按部就班执行",score:{J:2},isDecoy:false},
+    {t:"边做边调整，在过程中逐步清晰",score:{P:2},isDecoy:false},
+    {t:"有个大概方向就行，不用太细",score:{P:1},isDecoy:false},
+    {t:"计划是计划，现实是现实，随机应变最重要",score:{P:3},isDecoy:false}
+  ]},
+  {id:"jp4",q:"外卖比预计时间晚了30分钟，你的状态是：",type:"consistency",group:"JP",weight:1.4,ops:[
+    {t:"每隔几分钟看一次骑手定位，越来越烦躁",score:{J:2},isDecoy:false},
+    {t:"做自己的事，但心里一直惦记，效率降低",score:{J:1},isDecoy:false},
+    {t:"完全忘了这回事，骑手打电话才想起来",score:{P:2},isDecoy:false},
+    {t:"给骑手发「慢点没关系」，心里其实有点不爽",score:{J:0,P:0},isDecoy:false}
+  ]},
+  {id:"jp5",q:"你更认可哪种生活态度？",type:"normal",group:"JP",weight:1.0,ops:[
+    {t:"凡事预则立，不预则废，计划是基本尊重",score:{J:3},isDecoy:false},
+    {t:"计划赶不上变化，适应比规划重要",score:{P:3},isDecoy:false},
+    {t:"大方向有规划，细节随缘，不苛求完美",score:{J:1,P:1},isDecoy:false},
+    {t:"别人觉得我乱，其实我有自己的节奏",score:{P:1},isDecoy:false}
+  ]},
+  {id:"jp6",q:"你觉得自己完成任务的模式是：",type:"normal",group:"JP",weight:1.2,ops:[
+    {t:"提前完成，留有buffer， deadline是参考线",score:{J:3},isDecoy:false},
+    {t:"最后几天冲刺，效率反而更高",score:{P:2,J:1},isDecoy:false},
+    {t:"分事，感兴趣的爆肝，不感兴趣的拖延到死",score:{P:2},isDecoy:false},
+    {t:"经常立Flag然后倒，执行力需要提升",score:{P:2},isDecoy:false}
+  ]},
+  // 反向题
+  {id:"jp7r",q:"「计划是用来打破的」——你对此的态度：",type:"consistency",group:"JP",weight:1.5,ops:[
+    {t:"非常认同，计划太死板了，要灵活应对",score:{P:2},isDecoy:false},
+    {t:"部分认同，但大方向还是要遵守",score:{P:1,J:1},isDecoy:false},
+    {t:"不认同，好的计划是成功的保障",score:{J:2},isDecoy:false},
+    {t:"计划是给自己的约束，不是给别人的",score:{J:2},isDecoy:false}
+  ]},
+  {id:"jp8",q:"合租的公共区域有人用完东西没放回原位，你会：",type:"normal",group:"JP",weight:1.1,ops:[
+    {t:"顺手放回去，但心里给对方记一笔",score:{J:1},isDecoy:false},
+    {t:"直接提醒对方：请用完放回原处",score:{J:2},isDecoy:false},
+    {t:"无所谓，反正我也不会每次都放回去",score:{P:2},isDecoy:false},
+    {t:"制定一套收纳规则，希望对方遵守",score:{J:3},isDecoy:false}
+  ]},
+  // ---- 社会赞许 / 一致性检测 ----
+  {id:"lie1",q:"「我从不和任何人发生冲突」——这句话符合你的情况吗？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全符合，我从来不和人起争执",score:{socialDesirability:2},isDecoy:true},
+    {t:"大部分时候符合，冲突很少发生",score:{socialDesirability:1},isDecoy:true},
+    {t:"不太符合，我会有理有据地表达不同意见",score:{socialDesirability:0},isDecoy:false},
+    {t:"不符合，我觉得有建设性的冲突是有必要的",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie2",q:"「我从来没有对朋友产生过嫉妒的情绪」——这描述你准确吗？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全准确，我从不嫉妒朋友",score:{socialDesirability:2},isDecoy:true},
+    {t:"基本准确，我很少嫉妒",score:{socialDesirability:1},isDecoy:true},
+    {t:"不太准确，偶尔会有一点",score:{socialDesirability:0},isDecoy:false},
+    {t:"不符合，嫉妒是人类正常的情绪，我也有",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie3",q:"你在填写这份问卷时，有多少答案是你「真实的想法」，而不是你「觉得应该选的」？",type:"socialDesirability",group:"lie",weight:0.8,ops:[
+    {t:"全部都是真实想法，没有刻意选择",score:{authenticity:2},isDecoy:false},
+    {t:"大部分是真实的，小部分有所保留",score:{authenticity:1},isDecoy:false},
+    {t:"有些题选了更「体面」的答案",score:{authenticity:-1},isDecoy:false},
+    {t:"我一边做一边在想每道题在测什么",score:{authenticity:-2},isDecoy:false}
+  ]},
+  {id:"lie4",q:"「我总能在压力下保持冷静」——这描述你的程度是？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全符合，我真的很冷静",score:{socialDesirability:2},isDecoy:true},
+    {t:"比较符合，大部分时候能保持冷静",score:{socialDesirability:1},isDecoy:true},
+    {t:"一般，有时候会慌但能调整",score:{socialDesirability:0},isDecoy:false},
+    {t:"不符合，压力下我也会焦虑和失控",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  // ---- 深层行为指标 ----
+  {id:"beh1",q:"当你对一个项目/计划有了想法，你通常会：",type:"normal",group:"JP",weight:1.0,ops:[
+    {t:"立刻开始做，边做边改，快速出原型",score:{P:2},isDecoy:false},
+    {t:"先想清楚再动手，确保方向正确",score:{J:2},isDecoy:false},
+    {t:"想一个大概，然后开始，边做边完善",score:{P:1,J:1},isDecoy:false},
+    {t:"先在脑子里推演很多遍，觉得可行再开始",score:{J:2,N:1},isDecoy:false}
+  ]},
+  {id:"beh2",q:"你更容易为什么感到焦虑？",type:"normal",group:"TF",weight:1.0,ops:[
+    {t:"事情失控，局面混乱，没有方向",score:{J:2},isDecoy:false},
+    {t:"人际关系的冲突和误解",score:{F:2},isDecoy:false},
+    {t:"没有足够的时间完成任务",score:{J:1},isDecoy:false},
+    {t:"未来不确定，不知道会发生什么",score:{N:2},isDecoy:false}
+  ]},
+  {id:"beh3",q:"你更喜欢哪种工作环境？",type:"normal",group:"EI",weight:0.9,ops:[
+    {t:"开放式，和很多人随时交流协作",score:{E:2},isDecoy:false},
+    {t:"独立空间为主，偶尔开会讨论",score:{I:2},isDecoy:false},
+    {t:"有小团队，但各自分工明确不需要频繁社交",score:{I:1,E:1},isDecoy:false},
+    {t:"都可以，关键看做什么事",score:{E:0,I:0},isDecoy:false}
+  ]},
+  {id:"beh4",q:"你做决定时通常需要多久？",type:"normal",group:"JP",weight:1.0,ops:[
+    {t:"很快，直觉驱动，看感觉就定了",score:{P:2},isDecoy:false},
+    {t:"比较快，收集必要信息后迅速决定",score:{J:1,P:1},isDecoy:false},
+    {t:"比较慢，需要把所有信息整合分析",score:{J:2},isDecoy:false},
+    {t:"非常慢，反复权衡利弊，犹豫不决",score:{J:1},isDecoy:false}
+  ]}
+],
+"75":[]
+};
+
+// 完整75题 = 40题基础 + 35题关系维度
+var EQ=[
+  // ---- 关系依恋维度 ----
+  {id:"rel1",q:"刚在一起时，你最担心的是：",type:"normal",group:"anxietyLove",weight:1.2,ops:[
+    {t:"TA是不是真的喜欢我",score:{anxietyLove:2},isDecoy:false},
+    {t:"我们生活习惯合不合",score:{stability:1},isDecoy:false},
+    {t:"我表现够不够好，能不能留住TA",score:{anxietyLove:1},isDecoy:false},
+    {t:"不担心，享受当下，让关系自然发展",score:{openRel:1},isDecoy:false}
+  ]},
+  {id:"rel2",q:"给TA发消息，已读30分钟没回复，你会：",type:"normal",group:"anxietyLove",weight:1.3,ops:[
+    {t:"做自己的事，等TA回复再说",score:{stability:1},isDecoy:false},
+    {t:"隔10分钟再发一条，试探一下",score:{anxietyLove:2},isDecoy:false},
+    {t:"翻看TA朋友圈，分析为什么没回",score:{anxietyLove:3},isDecoy:false},
+    {t:"内心不安但强装镇定，等TA主动",score:{avoidance:1},isDecoy:false}
+  ]},
+  {id:"rel3",q:"你和TA冷战三天不说话，你会：",type:"normal",group:"anxietyLove",weight:1.3,ops:[
+    {t:"焦虑到无法正常工作，主动找TA和解",score:{anxietyLove:3},isDecoy:false},
+    {t:"陪TA冷战，等TA先低头",score:{avoidance:1},isDecoy:false},
+    {t:"冷静分析，找个合适的时机好好谈",score:{stability:2},isDecoy:false},
+    {t:"发一条朋友圈暗示心情，等TA主动",score:{controlLove:2},isDecoy:false}
+  ]},
+  {id:"rel4",q:"你做错了事惹TA生气，你通常会：",type:"normal",group:"humility",weight:1.2,ops:[
+    {t:"立刻真诚道歉，承认错误",score:{humility:2},isDecoy:false},
+    {t:"道歉但觉得不完全是自己的错",score:{avoidance:1},isDecoy:false},
+    {t:"等TA自己消气，用行动弥补代替语言",score:{avoidance:1},isDecoy:false},
+    {t:"看情况，有时候觉得不道歉也行",score:{avoidance:0},isDecoy:false}
+  ]},
+  {id:"rel5",q:"你会在伴侣面前完全做自己吗？",type:"normal",group:"honestyRel",weight:1.4,ops:[
+    {t:"完全能，TA爱我本来的样子",score:{honestyRel:2},isDecoy:false},
+    {t:"大部分时候可以，但会隐藏一些",score:{honestyRel:1},isDecoy:false},
+    {t:"会刻意表现更好的自己，怕被嫌弃",score:{anxietyLove:1},isDecoy:false},
+    {t:"完全不能，TA只会爱我表现出来的样子",score:{honestyRel:-2},isDecoy:false}
+  ]},
+  {id:"rel6",q:"TA说「我需要更多空间」，你的反应是：",type:"normal",group:"anxietyLove",weight:1.3,ops:[
+    {t:"尊重，给TA需要的空间",score:{tolerance:2,stability:1},isDecoy:false},
+    {t:"焦虑，觉得感情出了问题",score:{anxietyLove:3},isDecoy:false},
+    {t:"不解：为什么需要空间？是我哪里不对吗？",score:{anxietyLove:2,dependency:1},isDecoy:false},
+    {t:"也给TA空间，然后慢慢疏远",score:{avoidance:2},isDecoy:false}
+  ]},
+  {id:"rel7",q:"你们感情趋于平淡（在一起较长时间后），你会：",type:"normal",group:"stability",weight:1.2,ops:[
+    {t:"觉得正常，珍惜细水长流的感情",score:{stability:2,pureLove:1},isDecoy:false},
+    {t:"感到不安，怀疑是不是不够爱了",score:{anxietyLove:3},isDecoy:false},
+    {t:"主动制造新鲜感（旅行/新活动）",score:{optimism:1},isDecoy:false},
+    {t:"觉得该考虑分开了，寻找新的刺激",score:{avoidance:1},isDecoy:false}
+  ]},
+  {id:"rel8",q:"你最好的朋友说「你对象配不上你」，你会：",type:"normal",group:"commitment",weight:1.2,ops:[
+    {t:"维护伴侣，不允许朋友这样评价",score:{commitment:2,stability:1},isDecoy:false},
+    {t:"认真听，想想是不是真的",score:{humility:1},isDecoy:false},
+    {t:"和朋友吵一架，不允许这样评价",score:{avoidance:0},isDecoy:false},
+    {t:"记在心里，之后有意无意地挑剔伴侣",score:{competition:2},isDecoy:false}
+  ]},
+  {id:"rel9",q:"你和TA消费观差异很大，你会：",type:"normal",group:"tolerance",weight:1.1,ops:[
+    {t:"尊重差异，各管各的钱",score:{tolerance:2},isDecoy:false},
+    {t:"尝试沟通，希望对方能理解",score:{honestyRel:1},isDecoy:false},
+    {t:"为此频繁吵架，互不相让",score:{stability:-2},isDecoy:false},
+    {t:"勉强自己适应TA的消费习惯",score:{giving:1,avoidance:1},isDecoy:false}
+  ]},
+  {id:"rel10",q:"你们的关系被家人强烈反对，你会：",type:"normal",group:"commitment",weight:1.3,ops:[
+    {t:"坚定立场，和家人抗争到底",score:{commitment:2},isDecoy:false},
+    {t:"认真考虑家人的意见，权衡利弊",score:{stability:1},isDecoy:false},
+    {t:"偷偷继续，不让家人知道",score:{avoidance:2},isDecoy:false},
+    {t:"分手，不想让家人伤心",score:{avoidance:1,dependency:1},isDecoy:false}
+  ]},
+  {id:"rel11",q:"关系出现问题时，你的第一反应通常是：",type:"normal",group:"honestyRel",weight:1.2,ops:[
+    {t:"直接面对，约时间谈清楚",score:{honestyRel:2},isDecoy:false},
+    {t:"装作没事，期待问题自己消失",score:{avoidance:3},isDecoy:false},
+    {t:"发脾气，用情绪让对方知道问题严重",score:{avoidance:0},isDecoy:false},
+    {t:"找朋友诉苦，让朋友帮你分析",score:{dependency:1},isDecoy:false}
+  ]},
+  {id:"rel12",q:"你和TA吵架后，你通常需要多久恢复？",type:"normal",group:"stability",weight:1.1,ops:[
+    {t:"很快就恢复，吵完就完了",score:{stability:2},isDecoy:false},
+    {t:"几小时到一天，需要冷静一下",score:{stability:1},isDecoy:false},
+    {t:"需要好几天，慢慢消化情绪",score:{avoidance:1},isDecoy:false},
+    {t:"吵架对我影响很大，需要很久走出来",score:{avoidance:1,dependency:1},isDecoy:false}
+  ]},
+  {id:"rel13",q:"你通常在感情中的情绪状态是：",type:"normal",group:"stability",weight:1.2,ops:[
+    {t:"稳定，开心就是开心，不会忽冷忽热",score:{stability:2},isDecoy:false},
+    {t:"受TA的情绪影响很大",score:{dependency:2,anxietyLove:1},isDecoy:false},
+    {t:"大部分稳定，偶尔因为TA情绪失控",score:{stability:0},isDecoy:false},
+    {t:"心情起伏大，有时会无理取闹",score:{stability:-2},isDecoy:false}
+  ]},
+  {id:"rel14",q:"你们在一起后，你发现自己付出明显更多，你会：",type:"normal",group:"giving",weight:1.3,ops:[
+    {t:"调整节奏，不再单方面付出",score:{honestyRel:1},isDecoy:false},
+    {t:"继续付出，因为我更爱TA",score:{giving:2,pureLove:1},isDecoy:false},
+    {t:"减少付出，看对方会不会主动",score:{avoidance:1},isDecoy:false},
+    {t:"认真谈一次，关系需要平衡",score:{honestyRel:2},isDecoy:false}
+  ]},
+  {id:"rel15",q:"分手后，你通常需要多久走出来？",type:"normal",group:"avoidance",weight:1.1,ops:[
+    {t:"很快，我不太会被感情困住",score:{avoidance:2},isDecoy:false},
+    {t:"几周到几个月",score:{stability:1},isDecoy:false},
+    {t:"很久，需要很久才能彻底放下",score:{dependency:1,pureLove:1},isDecoy:false},
+    {t:"走不出来，会一直关注前任动态",score:{anxietyLove:3},isDecoy:false}
+  ]},
+  {id:"rel16",q:"你的伴侣被升职，发了庆祝动态，你会：",type:"normal",group:"competition",weight:1.2,ops:[
+    {t:"真心祝贺，觉得这是TA应得的",score:{giving:1,humility:2},isDecoy:false},
+    {t:"点赞评论，心里默默比较自己",score:{competition:2},isDecoy:false},
+    {t:"私下庆祝就好，不发朋友圈",score:{stability:1},isDecoy:false},
+    {t:"感到压力，开始暗暗努力",score:{competition:2},isDecoy:false}
+  ]},
+  {id:"rel17",q:"按下按钮可以显示所有人对你的真实看法，你会：",type:"normal",group:"humility",weight:1.3,ops:[
+    {t:"毫不犹豫地按，想知道真相",score:{humility:1},isDecoy:false},
+    {t:"犹豫很久，最后还是按了",score:{humility:2},isDecoy:false},
+    {t:"不按，有些东西不知道比较幸福",score:{avoidance:1},isDecoy:false},
+    {t:"假装不在乎，但会一直想这件事",score:{avoidance:0},isDecoy:false}
+  ]},
+  {id:"rel18",q:"你对自己在感情中的评价是：",type:"consistency",group:"honestyRel",weight:1.4,ops:[
+    {t:"坦诚、直接，有什么说什么",score:{honestyRel:2},isDecoy:false},
+    {t:"会照顾对方感受，委婉表达",score:{F:1},isDecoy:false},
+    {t:"不太会表达，行动多于语言",score:{avoidance:1},isDecoy:false},
+    {t:"会根据情况调整，不太一致",score:{avoidance:0},isDecoy:false}
+  ]},
+  // ---- 行为风格指标 ----
+  {id:"beh5",q:"在陌生场合，你如何建立连接？",type:"normal",group:"EI",weight:1.1,ops:[
+    {t:"找一个看起来有趣的人深度聊",score:{I:1,E:1},isDecoy:false},
+    {t:"和每个人都简单聊几句，保持轻量接触",score:{E:2},isDecoy:false},
+    {t:"观察谁比较有资源，定向接触",score:{Slytherin:2},isDecoy:false},
+    {t:"等人来主动找我",score:{I:2},isDecoy:false}
+  ]},
+  {id:"beh6",q:"你如何看待「人脉」这个词？",type:"normal",group:"Slytherin",weight:1.2,ops:[
+    {t:"真诚的关系比功利的人脉重要",score:{F:1},isDecoy:false},
+    {t:"人脉是必要的，但不刻意经营，随缘",score:{Slytherin:0},isDecoy:false},
+    {t:"人脉就是资源置换，清楚自己要什么就行",score:{Slytherin:3},isDecoy:false},
+    {t:"虽然知道它有用，但这个词让我生理不适",score:{avoidance:0},isDecoy:false}
+  ]},
+  {id:"beh7",q:"你更害怕哪种情况？",type:"normal",group:"TF",weight:1.1,ops:[
+    {t:"被群体孤立",score:{F:1},isDecoy:false},
+    {t:"失去对生活的掌控",score:{J:2},isDecoy:false},
+    {t:"一事无成，没有成就",score:{T:1},isDecoy:false},
+    {t:"被人看穿真实的自己",score:{avoidance:1},isDecoy:false}
+  ]},
+  {id:"beh8",q:"压力大时你最可能做什么？",type:"normal",group:"JP",weight:1.1,ops:[
+    {t:"制定计划解决，一步一步来",score:{J:2,T:1},isDecoy:false},
+    {t:"找朋友倾诉，倾诉完就舒服了",score:{F:2,E:1},isDecoy:false},
+    {t:"一个人待着，转移注意力",score:{I:2,P:1},isDecoy:false},
+    {t:"暴饮暴食或购物发泄",score:{avoidance:0},isDecoy:false}
+  ]},
+  {id:"beh9",q:"你的愤怒模式更接近？",type:"normal",group:"TF",weight:1.1,ops:[
+    {t:"爆发快但消得也快，说完就完",score:{Choleric:2},isDecoy:false},
+    {t:"很少发火，但发起来很可怕",score:{Phlegmatic:1},isDecoy:false},
+    {t:"藏心里慢慢给对方扣分，不正面冲突",score:{avoidance:1},isDecoy:false},
+    {t:"冷嘲热讽，用言语刺人",score:{T:2},isDecoy:false}
+  ]},
+  {id:"beh10",q:"你更容易为什么流泪？",type:"normal",group:"F",weight:1.0,ops:[
+    {t:"感人电影/小说中的情节",score:{F:2},isDecoy:false},
+    {t:"委屈不被理解的时刻",score:{F:1},isDecoy:false},
+    {t:"很少哭",score:{T:2},isDecoy:false},
+    {t:"看他人受苦或动物受苦",score:{F:2},isDecoy:false}
+  ]},
+  {id:"beh11",q:"朋友比你成功时，你的内心声音是：",type:"consistency",group:"competition",weight:1.4,ops:[
+    {t:"真心替他高兴，想学习经验",score:{F:1},isDecoy:false},
+    {t:"有点酸，但控制住了",score:{competition:1},isDecoy:false},
+    {t:"各人有各路，不关我的事",score:{T:1},isDecoy:false},
+    {t:"焦虑，我要更努力才行",score:{Enneagram3:2},isDecoy:false}
+  ]},
+  {id:"beh12",q:"你不是领导但方案更好，你会：",type:"normal",group:"TF",weight:1.2,ops:[
+    {t:"据理力争，直到大家接受",score:{T:2,Gryffindor:2},isDecoy:false},
+    {t:"先让领导觉得这是他的主意，再推动",score:{Slytherin:3},isDecoy:false},
+    {t:"接受团队决定，但心里保留意见",score:{avoidance:0},isDecoy:false},
+    {t:"嘴上说「好的」，执行时按自己的想法来",score:{Slytherin:1},isDecoy:false}
+  ]},
+  {id:"beh13",q:"面对突发重大改变，你的反应最接近：",type:"normal",group:"JP",weight:1.1,ops:[
+    {t:"兴奋，视作新的机会",score:{P:2},isDecoy:false},
+    {t:"焦虑，需要时间消化",score:{J:1},isDecoy:false},
+    {t:"立刻收集信息，理性评估影响",score:{T:2,J:1},isDecoy:false},
+    {t:"先看周围人的反应再决定",score:{F:1},isDecoy:false}
+  ]},
+  {id:"beh14",q:"你认为自己最让别人欣赏的特质是？",type:"normal",group:"lie",weight:1.0,ops:[
+    {t:"可靠，说到做到",score:{J:1},isDecoy:false},
+    {t:"有趣，在一起不无聊",score:{E:1},isDecoy:false},
+    {t:"清醒，看问题一针见血",score:{T:2},isDecoy:false},
+    {t:"温暖，让人放松",score:{F:2},isDecoy:false}
+  ]},
+  {id:"beh15",q:"完成这套题的过程中，你的状态是：",type:"consistency",group:"lie",weight:1.5,ops:[
+    {t:"很诚实地选了，有些选项让我不太舒服但还是选了",score:{authenticity:2},isDecoy:false},
+    {t:"大概知道每道题在测什么，选了自认为「对」的答案",score:{authenticity:-1},isDecoy:false},
+    {t:"有些题在两个选项间纠结，最后选了更体面的",score:{authenticity:-1},isDecoy:false},
+    {t:"一边选一边想：这题是不是在套路我",score:{authenticity:0},isDecoy:false}
+  ]},
+  {id:"beh16",q:"朋友向你借钱，你会更看重什么？",type:"normal",group:"TF",weight:1.2,ops:[
+    {t:"我们的关系到了这个份上没有",score:{F:2},isDecoy:false},
+    {t:"他有没有还款能力和计划",score:{T:2},isDecoy:false},
+    {t:"借了会不会影响我们的关系",score:{F:1},isDecoy:false},
+    {t:"他为什么会到这个地步，之前没有预判吗",score:{T:1},isDecoy:false}
+  ]},
+  {id:"beh17",q:"你更希望你们的感情状态是：",type:"normal",group:"dependency",weight:1.1,ops:[
+    {t:"每天在一起，恨不得24小时黏着",score:{dependency:2},isDecoy:false},
+    {t:"经常在一起，但也享受独处",score:{stability:1},isDecoy:false},
+    {t:"相对独立，有各自的生活圈子和空间",score:{openRel:2},isDecoy:false},
+    {t:"工作日各忙，周末腻在一起",score:{stability:1},isDecoy:false}
+  ]},
+  {id:"beh18",q:"你和TA分享秘密/心事吗？",type:"normal",group:"honestyRel",weight:1.2,ops:[
+    {t:"什么都愿意分享，没有保留",score:{honestyRel:2,dependency:1},isDecoy:false},
+    {t:"选择性分享，保护自己的隐私",score:{avoidance:1},isDecoy:false},
+    {t:"基本不说，怕被笑话或被利用",score:{avoidance:2},isDecoy:false},
+    {t:"只分享开心的事，负面情绪自己消化",score:{controlLove:1},isDecoy:false}
+  ]},
+  {id:"beh19",q:"你觉得「好的感情」最重要的标志是：",type:"normal",group:"stability",weight:1.1,ops:[
+    {t:"彼此信任，不需要刻意证明",score:{stability:2,tolerance:1},isDecoy:false},
+    {t:"能一起成长，互相激励变得更好",score:{giving:1,optimism:1},isDecoy:false},
+    {t:"每天都有新鲜感，从不无聊",score:{openRel:1},isDecoy:false},
+    {t:"在一起舒服，做自己不需要演",score:{honestyRel:2},isDecoy:false}
+  ]},
+  {id:"beh20",q:"你们感情中出现了很大的现实障碍（异地/家庭反对），你会：",type:"normal",group:"optimism",weight:1.2,ops:[
+    {t:"想办法解决，没什么障碍是绝对的",score:{optimism:2,stability:1},isDecoy:false},
+    {t:"一起想办法，但做好最坏打算",score:{stability:1,humility:1},isDecoy:false},
+    {t:"觉得困难太大，基本放弃",score:{avoidance:1},isDecoy:false},
+    {t:"想办法绕过障碍（比如说服家人）",score:{controlLove:2},isDecoy:false}
+  ]},
+  // 补充一致性检测
+  {id:"lie5",q:"「我总是能客观地评价自己和他人」——符合你的程度？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全符合，我确实很客观",score:{socialDesirability:2},isDecoy:true},
+    {t:"比较符合，大部分时候能",score:{socialDesirability:1},isDecoy:true},
+    {t:"一般，我有时候也会有偏见",score:{socialDesirability:0},isDecoy:false},
+    {t:"不符合，我经常被自己的情绪影响判断",score:{socialDesirability:-1},isDecoy:false}
+  ]}
+];
+
+QUESTIONS["75"] = QUESTIONS["40"].concat(EQ);
+
+// ============================================================
+// 【第二部分：命名与解读】
+// ============================================================
+var NK={"INTJ":"紫老头","INTP":"逻辑机器","ENTJ":"指挥官","ENTP":"辩论狂","INFJ":"提倡者","INFP":"理想主义者","ENFJ":"主人公","ENFP":"追梦人","ISTJ":"物流师","ISFJ":"守护者","ESTJ":"总经理","ESFJ":"执政官","ISTP":"鉴赏家","ISFP":"艺术家","ESTP":"冒险家","ESFP":"表演者"};
+
+var GM={
+"INTJ":"你其实比你自己以为的更值得被爱。偶尔允许自己「无效率」地快乐一次，也是一种能力。",
+"INTP":"你脑子里的世界很丰富，值得被更多人看见。那个能听懂你的人，一定在某个地方等你。",
+"ENTJ":"你习惯了掌控，但允许自己脆弱，也是一种力量。停下来喘口气，不会让你输掉任何东西。",
+"ENTP":"你的好奇心是天赋，别让它变成消耗你的债务。总有一个地方能让你的所有疯狂都变成燃料。",
+"INFJ":"你谁都顾及了，唯独没有顾过自己。是时候把自己也放进来，哪怕就一次。",
+"INFP":"你的敏感不是缺陷，是你的触角。总有人在认真地读你，而你值得那个认真的人。",
+"ENFJ":"你不必点燃自己来温暖别人。你的光值得照亮你自己，哪怕只是片刻。",
+"ENFP":"别怕无聊，深度有时候更接近自由。你那些看起来不切实际的想法，是这个世界进步的方式。",
+"ISTJ":"稳如磐石的你，偶尔也任性一下也无妨。世界需要你，但也需要你偶尔破碎一下。",
+"ISFJ":"你的好，应该被更多人看见和珍惜。别总是把自己放在最后——你也是值得被照顾的人。",
+"ESTJ":"效率之外，还有值得你慢下来的东西。你已经很强了，对自己温柔一点也不会怎样。",
+"ESFJ":"照顾别人之前，先照顾好自己。你的善良不应该成为别人消耗你的理由。",
+"ISTP":"说出口的话，比沉默更有力量。你不是不会，你只是还在等一个对的时机。",
+"ISFP":"你心里的风景，本身就是宝藏。别让他人的标准，成为你欣赏自己的阻碍。",
+"ESTP":"冒险的乐趣，在于你知道回家的路。浪够了就回来，家里有人在等你。",
+"ESFP":"你本身就是光。别总是忙着照亮别人——转过身，你也在发光。"
+};
+
+var ND={
+"INTJ":"你大概是一个很难被定义的人。\n\n在外人眼里，你是那个「冷静到有点可怕」的存在——脑子里永远有计划，说话永远有逻辑，做事永远有目的。但只有你自己知道，那些深夜里的反复推演、那些对人性复杂角落的洞察、那些对「意义」这件事近乎偏执的追问，都不是为了掌控什么，而是因为你真的很难忍受肤浅。\n\n你渴望被理解，但很难被说服。你的标准不是用来要求别人的，是用来要求自己的——可你也确实会用这个标准去丈量别人，然后在某个瞬间感到失望。这是你的温柔，也是你的残忍。\n\n你不太会表达情感。不是不会，是不知道怎么开口。所以你选择了沉默，用行动代替语言，用分析代替拥抱。这是你的方式，但偶尔，你也需要让自己被接住一次。\n\n你很罕见，也很珍贵。你的存在本身，就是对这个世界的一种抗议——抗议平庸，抗议敷衍，抗议一切不经过思考就交出的答案。你值得遇到一个能跟得上你节奏的人，也值得允许自己偶尔慢下来，感受一下这个世界除了「效率」以外的部分。\n\n学院归属是斯莱特林——你当然有野心，但你的野心从来不是碾压别人，而是证明给自己看：这个世界值得你认真对待，而你，配得上认真对待你的人。\n\n你的气质是粘液质，沉稳、冷静、不轻易动摇。这是你的铠甲，也是有时候让你显得遥远的原因。但那些真正走进你世界的人会发现，你的外壳之下，是一颗比谁都想被懂得的心。",
+"INTP":"你是一个脑子里住着整个宇宙的人。\n\n你喜欢思考，热爱逻辑，对这个世界有无数个「为什么」在脑子里同时运转。你的大脑是一座永不停歇的图书馆，哪怕在洗澡的时候也在自动推演各种可能性。你不是不说话，只是觉得很多话还没想清楚，说出来不如想进去。\n\n你不是社交达人，这是真的。但和你深度对话过的人，通常会对你念念不忘——因为你的脑子里真的有很多别人想不到的东西，那种「原来还可以这样想」的瞬间，往往发生在和你聊天之后。\n\n你有一种独特的温柔，是那种不会主动热情，但如果你真的需要帮助，会默默帮你把整个问题拆解清楚的人。你的好，是那种不会张扬的好。\n\n你习惯性地把情感那扇门关小一点，因为你觉得情感是混乱的、不可控的。但那不代表你没有——只是你选择让它住在更深的地方，等一个真正值得的人来敲门。\n\n你的内心世界很丰富，丰富到有时候自己都被自己的思维迷宫绕晕。但别忘了，外面的世界也在等你。偶尔出去走走，让别人看看你的宇宙，也不坏。\n\n学院归属是拉文克劳——对知识的渴望是你最真实的驱动力。而你的气质是抑郁质，那种细腻的、感受力很强的类型。你的敏感不是弱点，是你和这个世界之间最诚实的通道。",
+"ENTJ":"你是那个永远在向前看的人。\n\n目标清晰，效率至上，废话少说，直接干。你不是那种会被情绪拖后腿的人——至少在外人面前不是。你的世界里，时间是最贵的资源，而你已经习惯了把每一分钟都花在「值得」的事情上。\n\n你有天生的领袖气质。当别人还在犹豫的时候，你已经规划好了三条路；当别人还在讨论的时候，你已经在推动执行了。和ENTJ并肩作战，是一件很有安全感的事——你会是那个不会放弃的人。\n\n但你也知道，自己的问题在于太习惯「掌控」这件事了。你习惯了用效率来代替情感，用结果来代替过程。你觉得情绪化是软弱的表现，但偶尔，你也会在某个深夜感到一点疲惫——不是身体的累，是「为什么我做了这么多，还是没有人真的理解我」的疲惫。\n\n你不需要被安慰，你需要被挑战。但偶尔，允许自己停下来一下，让别人看到你也有脆弱的时刻，不会削弱你的力量，反而会让你更像一个完整的人。\n\n学院归属是格兰芬多——勇气是你的一部分，但真正的勇气不只是冲向战场，也包括敢于展示自己脆弱的一面。你，值得被一个敢于和你平起平坐的人看见。",
+"ENTP":"你是那个让聚会永远不无聊的人。\n\n你的思维跳跃而富有洞察力，总能看到别人看不到的角度。你热爱辩论，但本质上你是在通过碰撞来接近真理——虽然有时候你自己也分不清，到底是在追求真理，还是单纯觉得把别人绕晕很好玩。\n\n你的大脑永远在高速运转，脑子里同时有八百个计划在跑，每一个都很有趣，每一个都想试试。你不是三分钟热度，你是三分钟热度之后还能找到第八个理由继续下去的人——这是天赋，也是诅咒。\n\n你喜欢可能性。你讨厌被一个选项框住，讨厌「只能这样」这句话。你的世界里，路永远不止一条，而你的任务就是找出那条最有趣的路。\n\n但你也知道自己的软肋：你太擅长把开始说得精彩，把结尾说得潦草。你追逐可能性的样子很迷人，但和你合作过的人都知道：你很容易被更新的东西吸引，然后之前的那个，就悄悄不见了。\n\n你不是没有深度的人，你只是不太有耐心让别人看到你的深度。\n\n学院归属是拉文克劳——你对知识的好奇是你最真实的驱动力。而你的气质是胆汁质，热情、直接、充满能量。你的活力是真实的，别让它变成一种消耗。",
+"INFJ":"你是少数中的少数。\n\n你能感知到别人感知不到的东西——气氛中微妙的情绪、话语背后的潜台词、一个人笑容下面藏着的不安。这是天赋，也是负担，因为你承载的往往比你能放下的多。\n\n你习惯把最好的自己呈现给世界，把阴影留给自己。你是那个在朋友崩溃的时候会默默递纸巾的人，是那个永远能说对话的人，但你自己的崩溃时刻，往往是一个人默默消化，然后第二天假装什么都没发生。\n\n你渴望真正的理解，渴望一个能看见你的人。但你又很难主动开口，因为你习惯了去理解别人，而不习惯被理解。这种矛盾，是你一直在处理的课题。\n\n你有一种罕见的能力，就是让身边的人感到「被看见」。你会记得别人的喜好、小事、说过的话，然后在某个不经意的瞬间提起来，让对方觉得「原来她/他记得」。这是你的温柔，也是你被喜欢的原因。\n\n但别忘了，你也需要被这样对待。\n\n学院归属是赫夫帕夫——忠诚是你最核心的特质。而你的气质是抑郁质，细腻、深刻、感受力极强。你的存在本身，对某些人来说就已经是一种安慰。",
+"INFP":"你是那个在人群中安静着却闪闪发光的人。\n\n你有细腻的感受力，有强烈的价值观，有对自己和世界诚实的能力。你的脑子里有一个自己的世界，那里有关于「应该怎样」的美好想象，你一直在努力让现实靠近那个想象，哪怕这个世界经常让你失望。\n\n你的情绪像天气，有时候晴朗有时候暴雨，但这恰恰说明你的内心是活的、敏感的、和这个世界保持连接的。你不麻木，所以你会受伤；你受伤，是因为你还在乎。\n\n你有一种独特的能力，就是能看见每一种立场里的合理性。你不太会非黑即白地判断一个人，因为你总是能想象对方为什么会那样做——这种共情能力是你的天赋，也是你有时候难以做决定的原因。\n\n你内心的那片桃花源，值得被好好守护。但别让它变成一个只属于你自己的世界，偶尔让人进来坐坐，会比你以为的安全。\n\n学院归属是拉文克劳——对知识和意义的追寻是你的一部分。而你的气质是抑郁质，那种感受极深、内心世界极丰富的类型。你不需要变得「更坚强」或者「更现实」，你只需要被允许继续做你自己。\n\n总有人会看见你的光。",
+"ENFJ":"你是天生的连接者。\n\n你能看见每个人的独特之处，然后用自己的方式让对方感受到被重视。你的热情是真实的，你的关怀是细水长流的。你是那个在人群中会说「我觉得你可以做到」的人，也是那个会在别人最低落的时候记得拉一把的人。\n\n你有一种罕见的能力，就是让一个房间里的气氛变得温暖起来。你会自动感知到谁还没有被照顾到，然后走过去补上那一块。这是你的天赋，你用得很自然，甚至有时候意识不到自己在做什么。\n\n但你也需要被照顾。你把太多能量给了别人，以至于有时候你忘记了问自己：你累了吗？你需要什么？你有没有被真正地看见？\n\n你有一种隐藏的倾向，就是把自己的价值感和「被别人需要」绑定在一起。当别人不需要你的时候，你会感到失落——哪怕你嘴上不会承认。这是你需要去探索的部分。\n\n学院归属是格兰芬多——你的勇气不在于冲向战场，而在于愿意相信那些不容易被相信的东西。而你的气质是多血质，热情、活跃、善于社交。你的存在对很多人来说是一种礼物，但别忘了，你也有权利收到礼物。",
+"ENFP":"你是那个在咖啡馆里能和陌生人聊三个小时然后发现世界观都被刷新的人。\n\n你热情、好奇、充满可能性。你的脑子里永远有新的想法在冒出来，每一个都让你兴奋，每一个都值得探索。你的热情是会传染的，和你在一起的人会不自觉地觉得：这个世界好像也没那么无聊嘛。\n\n你喜欢「可能」这两个字。你讨厌被一个选项框住，讨厌「只能这样」的决定。你相信人生有无限种可能，而你的任务就是尽可能多地体验它们。\n\n但你也知道自己的问题：你很难深入。你可以在表面上和很多人聊得很开心，但真正走进你内心的人可能很少。你太习惯展示自己有趣的一面，而把自己脆弱的部分藏得很深——因为你觉得那部分不值得被展示。\n\n其实不是的。\n\n你比你自己以为的更深。你的敏感是你的一部分，你的脆弱也是。那些真正愿意走进来的人会发现，你的世界里不只有有趣，还有很多很多值得被认真对待的东西。\n\n学院归属是格兰芬多——勇气和热情是你的一部分。而你的气质是多血质，那种充满活力、喜欢新鲜感的类型。深度有时候比广度更值得你停留。",
+"ISTJ":"你是那个朋友遇到急事第一个想到的人。\n\n你守信用、负责任、说话算话。和你在一起，别人有一种稳稳的安全感——你说今天交稿就今天交稿，你说这件事交给我就一定会有个结果。你不是那种会放空炮的人，你是那种让人觉得「交给他就放心了」的人。\n\n你有一种独特的可靠，是那种不需要张扬的可靠。你不邀功，不张扬，做完了就说做完了，然后继续做下一件事。你的存在是那种「平时不觉得，但没有了会很慌」的存在。\n\n但你也知道自己的问题：你不太会处理变化。你习惯了按计划行事，习惯了已有的路径，而当事情脱离控制的时候，你的第一反应不是适应，而是焦虑。你需要允许自己更灵活一点，偶尔放弃一点控制权，世界不会塌下来的。\n\n你不太会表达情感。不是不会，是你觉得行动比语言更重要。但有时候，一句「谢谢你，你对我很重要」比做十件小事更有力量。\n\n学院归属是赫夫帕夫——忠诚和勤奋是你最被低估的美德。而你的气质是粘液质，那种沉稳、务实、不多废话的类型。你的好是那种细水长流的好，越久越珍贵。",
+"ISFJ":"你是那个默默把所有事情都想在前面的人。\n\n你用行动表达爱，而不是语言。你会在别人还没开口的时候就预判到对方需要什么，你会在事情变糟之前就把可能性排除掉。你的好，是那种润物细无声的好——别人事后回想起来才会发现：原来那件事，也是她/他帮的忙。\n\n你是一个很温柔的守护者。你记得别人的生日，记得别人的喜好，记得别人随口说过的一句话，然后在某个合适的时间点把它用上。这不是刻意，这是你关心人的方式。\n\n但你也有你的问题：你太习惯把自己放在后面了。你会照顾所有人，除了自己。你会觉得自己的需求不重要，或者说了也没用。但其实，你的需求和别人的需求一样重要。你不是天生的配角，你只是习惯了站在旁边。\n\n你有一种隐藏的固执：你不太容易直接说「不」，但你会用行动来表达你的界限。所以有时候别人会困惑——为什么她/他突然不热情了？你只是用另一种方式在说：我累了，或者，我不喜欢这样。\n\n学院归属是赫夫帕夫——忠诚是你最核心的特质。而你的气质是抑郁质，细腻、感受力强、内心世界丰富。你的好，应该被更多人看见和珍惜。",
+"ESTJ":"你是秩序的守护者，高效而不失人情味。\n\n你执行力强，说到做到，是不容忽视的中坚力量。你的世界里，规则是有意义的，承诺是需要兑现的，结果是检验过程的唯一标准。你不是那种会在乎别人怎么说的人，你只在乎事情有没有做好。\n\n你是那种「交给我就放心」的人——因为你真的会把事情做好，而且会做好到超出别人的预期。你的效率是真实的，你的可靠是真实的，你的存在本身就是一种稳定感。\n\n但你也知道自己的问题：你有时候太看重规则和结果，而忽略了人的感受。你觉得「做好事」比「让人舒服」更重要，但你忘了，如果忽略了这部分，事情做好了你也会觉得很空。\n\n你不太会处理模糊的情况。你喜欢清晰、喜欢计划、喜欢结果可控。但生活不是按照计划来的，你需要允许一些东西超出你的掌控，这样你才能真正体验到「意外」的乐趣。\n\n学院归属是格兰芬多——你的勇气在于敢于承担、敢于行动。而你的气质是胆汁质，直接、果断、有决断力。你的力量是真实的，别只把它用在「效率」上。",
+"ESFJ":"你是社交场合里的温暖光源。\n\n你能记住每个人的生日和喜好，然后给出一个惊喜。你让这个世界更有温度——不是因为你做了什么了不起的事，而是你在那些小事上从来不敷衍。你是那种让人觉得「被记得真好」的人。\n\n你有一种天赋，就是让每个和你在一起的人都觉得自己是被欢迎的、被重视的。你会自动感知到谁还没被照顾到，然后走过去补上那一块。这是你的温柔，你用得很自然。\n\n但你也有你的问题：你不太会拒绝。你害怕让别人失望，所以你总是答应那些你其实不太想做的事。你把自己放在最后，但最后往往已经没有「你」了。你需要学会说「不」，哪怕对方会失望。\n\n你的价值感一部分来自于「被需要」。当别人不需要你的时候，你会感到失落。但你需要知道，你的价值不是由别人决定的。你值得被爱，不是因为你做了什么，而是因为你本身。\n\n学院归属是赫夫帕夫——忠诚和温暖是你最核心的特质。而你的气质是多血质，热情、活跃、善于社交。你是让这个世界变得更好的那类人，别把自己用空了。",
+"ISTP":"你是那个动手能力超强的人，出了问题你第一个冲上去。\n\n你冷静、务实、不多废话。你的第一反应永远是「让我来看看是什么问题」，而不是先表达情绪。你是那种能把手弄脏、把问题解决、然后拍拍手走人的人。你不是不在乎，你是把在乎藏在了行动里。\n\n你喜欢独处，这不是因为你不合群，而是因为你觉得一个人做事效率更高、更自在。你不需要太多社交来充电，你只需要一个能让你专注的环境，然后做你想做的事。\n\n但你也知道自己的问题：你不太会表达情感。你觉得说出来太矫情，不如做出来。但有时候，一句「我在乎你」比做十件事更有力量。你的情感不是不存在，是你把它藏得太深了。\n\n你是那种「酷」的人——不是因为你在意酷这件事，而是你真的不太在乎外界的评价。但有时候这种「不在乎」也是一种在意，是你在用另一种方式保护自己。\n\n学院归属是斯莱特林——你懂规则，也懂规则背后的逻辑。而你的气质是粘液质，那种冷静、务实、不动声色的类型。你的可靠是那种不需要承诺的可靠。",
+"ISFP":"你是那个安静地让所有人都感觉舒服的人。\n\n你有自己的审美和节奏，不随波逐流。你活在当下，用心感受每一刻的细腻——光线、音乐、空气里微妙的气息、一个人说话时的语气……这些是别人容易忽略的东西，但你在乎。你的感受力是你和这个世界之间最真实的连接。\n\n你有一种独特的温柔，是那种不张扬的温柔。你不太会说好听的话，但你会在行动上表达关心。你不太会主动，但你会用陪伴来代替语言。你是那种让人觉得「和她/他在一起很舒服」的人。\n\n但你也有你的问题：你很固执，但你的固执不太容易被发现。你会表现得「随便」「都可以」，但其实你心里有一个自己的标准，只是不太愿意说出来。当别人触碰到那个标准的时候，你会选择沉默或者逃避，而不是直接说「不」。\n\n你需要学会更直接地表达自己。你的需求和感受不是不重要的东西，你只是习惯了把它放在后面。但真正在乎你的人，也想知道你在想什么。\n\n学院归属是斯莱特林——你懂美，也懂美背后的代价。而你的气质是抑郁质，细腻、深刻、感受力极强。你的存在本身就是一种艺术。",
+"ESTP":"你是生活的玩家，永远知道哪里有好玩的。\n\n你活在当下，享受过程。你的活力会传染——和你在一起的人会不自觉地觉得生活好像也没那么无聊。你的冒险精神是真实的，你对「体验」的渴望是真实的，你不喜欢被框住，也不喜欢被定义。\n\n你是那种能让聚会活起来的人。你会带动气氛，会讲有意思的故事，会在合适的时候说合适的话。你有一种独特的社交直觉，知道什么时候该收，什么时候该放。\n\n但你也知道自己的问题：你的享乐主义是有代价的。你习惯活在表层，逃避那些需要深入的东西。派对结束后的空虚，你总是假装感受不到。你害怕停下来，因为停下来就意味着要面对一些你一直在逃避的东西。\n\n你需要允许自己慢下来，让一些东西真正进入你的内心，而不只是从你的世界里穿过。\n\n学院归属是格兰芬多——勇气和冒险是你的一部分。而你的气质是胆汁质，直接、有活力、喜欢刺激。你的生活不只需要刺激，也需要深度。",
+"ESFP":"你是那个把快乐带给所有人的人。\n\n你热情、开放、有表现力。生活本身就值得庆祝，而你让这个庆祝变得更加具体。你是那种能让身边的人觉得「今天还挺有意思」的人，你的光热是真实的。\n\n你喜欢人群，喜欢被看见，喜欢成为焦点。这不是虚荣，这是你充电的方式。你需要被关注，需要被喜欢，需要被需要——这不是弱点，这是你的一部分。\n\n但你也知道自己的软肋：你很难真正和一个人深度连接。你可以在人群里笑得很开心，但派对结束后你可能感到更空。你害怕太久的亲密，因为亲密意味着要把自己交出去，而你不确定对方会不会接住。\n\n你需要学会在人群之外也找到自己。独处不是你的敌人，它是让你更了解自己的机会。你比你展现出来的那一面更丰富、更深刻，只是你还没给自己机会展示出来。\n\n学院归属是格兰芬多——勇气是你的一部分。而你的气质是多血质，热情、活跃、喜欢新鲜感。你的存在本身就是一种礼物，但别忘了也给自己留一份。"
+};
+
+var TD={
+"INTJ":"先说一个你可能不愿意承认的事实：你那些所谓的「理性分析」，有相当一部分不过是在给自己的冷漠找借口。你不是不懂情感，你只是懒得处理情感，因为情感太麻烦了，而分析问题多简单啊——输入变量，输出结论，逻辑自洽，完美闭环，还不用承担任何情绪上的风险。\n\n你习惯性地把「高标准」当成武器。对自己高标准没问题，但你对别人也这样，而且你还特别擅长用一种「我只是追求完美」的语气来掩饰你的挑剔。说白了，你就是很难对任何人真正满意，包括你自己。\n\n你说你渴望真正的理解——但你有没有想过，为什么你渴望的东西永远得不到？因为你根本不给别人机会。你不会主动展示你的脆弱，你不会在别人面前示弱，你永远端着，端到自己都信了「我就是这样冷静理性的人」。结果就是：所有人都觉得你很厉害，但没有人觉得可以走近你。\n\n你以为你在筛选别人，其实你在隔离自己。你说「能跟上我节奏的人太少了」，但实际情况可能是：不是别人跟不上，是你根本不想让人跟上来。你怕什么？怕被人看穿你那套理性外壳下面其实也有一颗会慌的心？\n\n还有，你对「情绪」这件事的态度是有问题的。你觉得情绪化是软弱，但你有没有想过，完全没有情绪的人生是不是另一种虚无？你用「效率」和「意义」填满了你所有的时间，但你真的快乐吗？还是你只是太擅长自我说服，以至于连自己都骗过去了？\n\n你的斯莱特林属性让你成为一个出色的谋略家，但谋略家最大的问题就是：什么都算清楚了，唯独算不过自己的心。你以为你在掌控一切，其实你只是把感情那部分切掉了，然后告诉自己「那不重要」。\n\n最后送你一句：你不是不需要人，你只是不敢要。这个问题，恕我直言，比你想的严重多了。",
+"INTP":"你知道你最大的问题是什么吗？是你脑子里装了太多东西，但真正做出来的少之又少。你是那种「想得很清楚但永远不行动」的人——你想一个计划，想到第三层的时候计划本身已经完美了，然后你觉得「既然都想清楚了，干嘛还要做」，于是就没有然后了。\n\n你说你不是社交达人，这是真的。但你有没有想过，你对情感的迟钝不是你天生的特质，而是你选择性地关闭了某扇门？你觉得感情是混乱的、不可控的，所以干脆不碰。但不碰不代表它不存在，它只是变成了你房间里的大象，你假装看不见，但它每天都在。\n\n你对「被理解」这件事有一种近乎洁癖的渴望，但你自己从来不主动去理解别人。你觉得自己很深刻、很有想法，但你有没有发现，你的深刻大多数时候只用来分析别人，而不是用来审视自己？你永远在找别人的漏洞，但对自己的漏洞视而不见。\n\n你还有一个问题：你太喜欢躲在「逻辑」后面了。逻辑是你最好的挡箭牌——当别人说「你这样做有点伤人」，你可以说「我只是在陈述事实」。但事实是，逻辑从来不是冷酷无情的理由，逻辑只是你不愿意承担情感责任的借口。\n\n你以为你不说话别人就不知道你在想什么？你那点心思都写在脸上了，只是你自己觉得藏得很好而已。你那种「我知道得比你们都多」的优越感，你以为别人感觉不到？你以为你不表现出来就等于不存在？\n\n你的拉文克劳属性让你痴迷于知识和思考，但知识本身不能当饭吃。你需要学会「做了再说」，而不是「想了再做」，更不是「想完就忘」。\n\n还有那句「我不是不会社交，只是懒得」——你信吗？反正我不信。",
+"ENTJ":"ENTJ最大的问题就是：控制欲是披着「效率」外衣的，而你们自己往往浑然不觉。\n\n你觉得世界应该按你的规则运行。当它不运行时，你的第一反应不是适应，而是怪别人不够努力、不够聪明、不够配合。你很少问「我是不是有问题」，你永远在问「别人哪里没做好」。\n\n你把「成功」当成衡量一切的标准。你觉得有钱、有权、有结果才是人生赢家，所以你会用这套标准去丈量所有人——包括你的伴侣和朋友。你可能会在某个深夜觉得「为什么我这么成功了还是不开心」，但第二天醒来你就会告诉自己「那是因为还不够成功，再努力一点就好了」。\n\n你很少真正道歉。不是不会，是不想——因为你觉得道歉意味着你错了，而你怎么能错呢？你是那个掌控全局的人啊。你会道歉，但你的道歉永远带着一个转折：「对不起我语气重了点，但你也有问题。」这不是道歉，这是谈判。\n\n你对「脆弱」这件事有着本能的抗拒。你觉得示弱是输家才会做的事，所以你永远在逞强。但逞强久了，你自己都分不清哪些是真的强，哪些只是死撑。你不允许自己失败，不允许自己累，不允许自己「不知道」。\n\n你身边的人其实压力很大——因为你要赢，他们也必须跟着你赢。你有没有想过，有些人不是不想赢，是他们压根不想跟你一起赢？你以为你在带团队，其实你在吓跑所有真正有想法的人，留下的都是不敢说话的人。\n\n你的格兰芬多勇气是真实的，但真正的勇气不是永远冲锋，真正的勇气是敢于停下来承认「我累了」或者「我错了」。这个，你需要学。",
+"ENTP":"你喜欢辩论，但你辩论是为了赢，不是为了真理。\n\n你擅长把别人绕晕然后宣布自己是正确的。你太享受「聪明」这件事了，享受别人说「哇你怎么这么快就想到了」。但你有没有想过，你每次辩论赢了之后，你的朋友越来越少？\n\n你的「开放」有时候只是喜新厌旧的借口。你对一件事感兴趣，感兴趣到一半又对另一件事感兴趣，然后之前的那个就被你扔了。你以为自己很灵活、很有探索精神，但其实你就是没长性。什么事都是三分钟热度，三分钟之后你已经开始想下一个了。\n\n你有一个很大的问题：你太擅长说了，但不太擅长做。你脑子里八百个创业点子，但没有一个是真正落地的。你觉得「想」就是「做」，或者至少「想」比「做」更有价值。你错了。\n\n你用「幽默感」掩盖了很多东西——掩盖你的不安全感，掩盖你害怕被看穿，掩盖你其实不知道自己真正想要什么。你在人群里永远是那个最会说话的人，但曲终人散之后，你是不是经常觉得空落落的？\n\n你以为你在探索可能性，其实你是在逃避深度。你觉得「浅」比较安全，因为深的东西意味着要面对自己，而你不太敢。\n\n你还有一个问题：你对亲密关系有一种本能的逃避。你可以和一万人聊天，但你很难和一个人真正走近。不是你不会，是你不想——因为你怕走近了之后，就没办法随时撤退了。\n\n你的拉文克劳属性让你痴迷于知识和想法，但想法不等于行动。你需要学会「做完一件事」，而不是永远「开始下一件事」。",
+"INFJ":"你是那种隐性控制型理想主义者，你自己可能完全没意识到。\n\n你总想拯救别人——但你有没有想过，你是真的在关心对方，还是在满足「我是重要的」这种需求？你帮助别人的时候，有没有一种隐隐的「我比你更知道什么对你好」的优越感？你倾听别人的时候，有没有一边听一边在心里分析「这个人是怎么回事」？\n\n你很少直接表达不满。你选择的方式是沉默和疏远——突然不回消息，突然态度变冷，突然开始「忙」。你以为别人不知道你在干嘛？你以为你的冷暴力不是暴力？你的不说，比说还伤人，因为对方根本不知道哪里做错了，只能在那里猜。\n\n你有一种能力，就是让别人觉得「我很重要」，但这种能力是有条件的——对方得按照你期望的方式存在。当对方不符合你的预期的时候，你会开始扣分，一点一点地扣，但对方完全不知道。你表面上还是那个温柔的、善解人意的INFJ，但心里已经把对方判了死刑。\n\n你说你渴望理解，但你很少给别人机会去理解你。你把自己包得太紧了，紧到连你自己都快忘了里面是什么。你觉得你是在保护自己，但换个角度想想，你也是在拒绝别人。\n\n你还有一个问题：你太习惯美化自己的情感了。你觉得你的感情都是「为了对方好」，但实际上呢？你有没有那么一瞬间，是纯粹为了对方，而不是为了你自己？\n\n你的赫夫帕夫忠诚是真实的，但你的控制欲也是真实的——只是它藏在温柔的外壳下面，藏得很好而已。",
+"INFP":"INFP的情绪过山车是真的，而且它比你想的更影响别人。\n\n你以为你的情绪波动是「真实」的表现，是「做自己」，但你有没有想过，你的「真实」有时候是别人的灾难？早上还好好的，下午就突然阴郁了，晚上又恢复了——但和你在一起的人这一天是怎么过的你知道吗？他们不知道自己做错了什么，只能小心翼翼地猜测，然后莫名其妙地成为你情绪的出气筒。\n\n你的「我很特别」这种自我认知，偶尔会成为你不努力的借口。「我就是这样的人」「我就是这样想的」「这不符合我的价值观」——当这些话出现的时候，它们是真实的自我表达，还是你在给自己的逃避找理由？\n\n你有一种能力，就是把自己的所有行为都合理化。你嫉妒了？你会说「我这是在乎这段关系」。你逃避了？你会说「我只是需要空间」。你伤害了别人？你会说「这是我的真实感受」。你的自我辩护能力，比你的共情能力还要强。\n\n你对「意义」的追寻有时候是一种逃避——逃避现实，逃避平庸，逃避承认「我可能永远都成不了我想成为的那个人」。你把「我在追寻意义」当成不接地气的理由，但真正的意义往往藏在那些看起来很无聊的日常里，而不是你幻想的那个「真正的自我」。\n\n你还有一个问题：你很难被真正帮助。不是没人想帮你，是你永远在拒绝。你会说「你不懂」「你不知道我的情况」「这不一样」——但真实原因是，你害怕改变，因为改变意味着你之前坚持的那些东西可能都是错的。\n\n你的拉文克劳属性让你痴迷于知识和意义，但知识和意义不能当饭吃。你需要学会「活在现实里」，而不是永远活在你的精神世界里。",
+"ENFJ":"ENFJ的精明是藏在温柔里的，你自己可能真的没发现。\n\n你让每个人都觉得是特别的朋友，但你在心里给所有人排了名单。谁对你有用，谁对你没用，谁可以深交，谁只是表面朋友——你心里一清二楚。你以为你在「照顾」所有人，其实你在「管理」所有人。\n\n你说话永远很好听。你会说「我真的在乎你」「我把你当最好的朋友」「你对我很重要」——但你有没有发现，你说完这些话之后，转头就可以对另一个人说一模一样的？你是真的在乎，还是只是在执行「好社交」的社交技能？\n\n你的「我这是为你好」，有时候是为你好，但更多时候是为了让你觉得「她/他是为我好」。你想让对方觉得被照顾，因为这样对方就会更依赖你，更离不开你。你在用温柔的方式建立一种「你需要我」的关系结构。\n\n你很难接受被拒绝。当你说「我这是关心你」的时候，如果对方说「我不需要」，你会感到受伤——不是因为你在乎对方的感受，而是因为你的关心被拒绝了，你的自我价值感受到了质疑。\n\n你还有一点控制型人格。你不会直接说「你要这样做」，你会说「我建议你这样做，你觉得呢」——然后当对方说出和你预期不一样的答案时，你会开始旁敲侧击地引导，直到对方说出你想要的答案。你以为这是沟通技巧，其实是控制。\n\n你的格兰芬多勇气是真实的，但你的控制欲也是真实的——只是它藏在关心和照顾的外壳下面，藏得比较深而已。",
+"ENFP":"你是开头热情似火结尾烂尾的人，这个你自己心里没点数吗？\n\n你追逐可能性的样子很迷人，但和你合作过、共同生活过、深度交往过的人都知道：你很容易被更新的东西吸引，然后之前的那个——不管是人还是项目还是承诺——就悄悄地被放在一边了。你不会说「我不要了」，你只是「暂时没顾上」。但「暂时」有时候就是永远。\n\n你说你是「自由的灵魂」，但你有没有想过，你对「新鲜感」的依赖，有时候是另一种形式的逃避？逃避深度，逃避责任，逃避承认「再好的关系也有无聊的时候，而无聊需要的是面对，不是逃跑」。\n\n你的热情是真实的，但你的热情太容易给了。你今天可以和一个刚认识的人聊三个小时，像认识了十年的老朋友；明天你就可以把这个「十年老朋友」忘在脑后，去追逐下一个让你兴奋的人。你的感情不值钱，不是因为它不真实，而是因为给得太容易了，就不值钱了。\n\n你还有一个问题：你太擅长美化自己了。你会把「我就是这样三分钟热度的人」说成「我永远在追求新的可能性」，然后觉得自己很酷。但真实情况是：你很难对任何一件事或者任何一个人真正负责任。你害怕承诺，因为承诺意味着限制，而你不能忍受限制。\n\n你用「我有很多可能性」来掩盖「我不能坚持」这件事。你用「我追求自由」来掩盖「我害怕深度」这件事。你永远在开始，永远不结束——或者更准确地说，你永远在假装结束，然后悄悄开始新的。\n\n你的格兰芬多勇气是真实的，但真正的勇气是敢于对一个选择负责到底，而不是永远有「另一个选择」。",
+"ISTJ":"ISTJ最大的问题是：你用「可靠」当借口，拒绝了一切成长和变化的可能。\n\n你说你是那种「交给我就放心」的人，对，你是可以信赖的——但问题是，你的可靠是有代价的。你的代价就是，你不允许自己有任何意外、任何创新、任何「计划外」的东西。你把自己活成了一台精密的机器，机器是不会出错的，但机器也不会成长。\n\n你觉得「稳定」是一种美德——某种程度上确实是，但当你把稳定当成唯一重要的东西时，你就失去了所有的弹性和可能性。你排斥不确定性，但生活本身就是不确定的，你越是排斥它，它就越是在你最没防备的时候给你一巴掌。\n\n你对「规则」的迷信有时候到了荒谬的地步。你觉得规则存在就是合理的，但你有没有想过，有些规则本身就是用来被打破的？你不是那种能推动变革的人，因为在你看来，任何改变都是对「秩序」的威胁。\n\n你不太会处理模糊的情况。当事情脱离了你的计划，你会焦虑、烦躁、然后更加紧抓你已经知道的东西。你的应对方式是「回到熟悉的轨道」，而不是「学习如何应对不熟悉的情况」。所以你一辈子可能都在走同一条路，只是路上的风景换了几次而已。\n\n你对情感的态度是：能不谈就不谈，谈了就觉得是浪费时间。但你没有发现，当你不处理情感的时候，你其实是在用另一种方式处理——用愤怒、用冷落、用「我就是这样的人」来表达你的不满。你以为你很理性，你只是在逃避。\n\n你的赫夫帕夫忠诚是真实的，但忠诚不是不去成长，忠诚是在成长之后依然选择留下。",
+"ISFJ":"ISFJ的问题是：你的心里有一本小账本，记着每个人的好坏，只是你不说而已。\n\n你以为你在「无私地付出」，但你的付出是有记录的。你帮了谁一个忙，你记得；谁欠了你什么，你也记得；谁没有回报你，你更记得。你不是那种「不求回报」的人，你是那种「不主动要求回报，但心里一直在算」的人。\n\n你的「老好人」形象是你精心维护的人设。你帮忙、照顾、记住所有人的事情——但你做这些的时候，是真的心甘情愿，还是在积累「我对你这么好，你怎么能这样对我」的资本？你有没有在某个深夜，默默地翻这本账，然后觉得「我付出了这么多，却没有得到应有的回报」？\n\n你有一个大问题：你不敢直接说「不」。你用「我很忙」「我不太方便」来拒绝，但当对方还是坚持的时候，你就妥协了。然后你就开始生闷气，开始冷淡，开始在心里扣分。你不说，但你会用行为来表达——然后对方会奇怪，为什么你突然变了？\n\n你还有一个问题：你过度在意别人对你的看法。你需要被喜欢，被认可，被需要。当有人对你态度不好，你会想很久——是我哪里做错了？我怎么得罪他了？他是不是讨厌我了？你的情绪被别人的一句话就能左右，你以为你是为了别人活着吗？\n\n你照顾所有人的感受，唯独忘了照顾自己。你把自己放在最后，但最后往往已经没有「你」了。然后你还委屈——凭什么我照顾了所有人，却没人照顾我？但问题是，你从来没有给过别人照顾你的机会。\n\n你的赫夫帕夫忠诚是真实的，你的付出也是真实的——但你的账本也是真实的。",
+"ESTJ":"ESTJ的你，适合当领导，但不适合当朋友。\n\n你把「效率」当成最高价值。你觉得做决定要快，执行要快，结果要快——但你忘了，人不是机器，人需要时间、需要情感、需要被理解。你在追求效率的过程中，把所有人的感受都踩在了脚下，然后你还觉得委屈：我这么努力，为什么没人感激我？\n\n你的「直接」有时候只是一种粗暴。你说「我说话直，你别介意」——但说完伤人的话之后，你从来没有真正在意过别人介不介意。你的直白是爽了你自己，但别人承受了代价。\n\n你不太能接受批评。你觉得你都是对的，因为你是领导，因为你有经验，因为你是长辈。所以当别人指出你的问题时，你的反应不是反思，而是反驳。你会找理由，会解释，会说「你不懂」。\n\n你对「成功」的定义太窄了。你觉得有钱、有地位、有结果才是成功，所以你用这套标准去衡量所有人。当别人选择了和你不一样的路时，你会觉得「这人没出息」「这人不够努力」。但你从来没有想过，每个人对成功的定义可能不一样。\n\n你还有一点：你不善于承认错误。你会道歉，但你的道歉永远带着解释：「对不起，但这是因为……」「对不起，但情况特殊……」「对不起，但你也有问题……」你不是在道歉，你是在开脱。\n\n你的格兰芬多勇气是真实的，但真正的勇气包括承认「我可能是错的」。",
+"ESFJ":"ESFJ的过度关心有时候是种负担，你有没有意识到？\n\n你觉得你在照顾别人，但有时候你只是无法接受别人不需要你。当你说「我这是关心你」的时候，你是真的在关心对方，还是在满足「我是一个很好的朋友/伴侣/家人」这个人设？你需要别人接受你的关心，当别人不需要的时候，你会觉得受伤。\n\n你太在意「被喜欢」这件事了。你需要所有人喜欢你——朋友、家人、同事、邻居、甚至路边摊的老板。当有人对你态度不好，你会想很久很久。你把你的情绪控制权交到了别人手里，然后你还怪别人让你不开心？\n\n你还有一个问题：你很难说不。你的「好」有时候是假的——因为你答应的时候心里已经在后悔了，然后你就开始不爽，开始抱怨，开始觉得自己被利用了。你不是真的「好」，你是真的「不敢不好」。\n\n你用「热情」来掩盖你的焦虑。你永远在忙，在组织，在关心，在照顾——因为停下来就意味着要面对「如果没有这些，我还剩下什么」这个问题。你害怕空闲，害怕独处，害怕那种「没有人需要我」的空虚感。\n\n你的赫夫帕夫温暖是真实的，但温暖不应该是你唯一的价值来源。你需要学会做一个「不是对所有人都好」的人，那样你才会遇到真正值得你付出的人。",
+"ISTP":"ISTP的「酷」是保护色，你真的不在乎，还是用不在乎来掩饰在乎？\n\n你说「无所谓」「没关系」「随便」——但你的无所谓和真的无所谓的人的无所谓不是一回事。真正无所谓的人不会事后翻旧账，不会把每一次「不计较」都记在心里，然后在某一天突然爆发。你的无所谓是攒着的，是攒着攒着就变成了一个定时炸弹。\n\n你有一个很大的问题：你很难和人有真正的情感连接。你觉得「说出来太矫情」「表达感情太肉麻」「我不需要任何人」——但你的行动说明了一切。你不主动联系任何人，不主动关心任何人，不主动表达任何情感——然后你还奇怪为什么别人离你越来越远？\n\n你的「我不需要被理解」是一种防御机制。你害怕暴露自己的脆弱，所以你先下手为强，告诉所有人「别来了解我」。但你内心深处是不是其实挺希望有人能读懂你的？只是你不想承认。\n\n你对亲密关系有一种本能的逃避。你的「独立」是真的，但「独立」有时候只是「害怕依赖」的另一种说法。你不是不需要亲密，你只是不敢需要。你怕一旦依赖了，就失去了主动权，就变成了「如果他离开我我就完了」的人。\n\n你的斯莱特林务实是真实的，但务实不等于冷血。你不是不在乎，你只是不知道怎么说出口。这个问题，比你想的更影响你的生活质量。",
+"ISFP":"ISFP的你，活在自己的审美世界里——但这个世界，可能比你想的更孤独。\n\n别人觉得你随和、好相处、不争不抢——但你内心固执得要命。你的「随便」「都可以」是假的，你的标准一直在，只是你不说。当别人无意中触碰到你的标准时，你会突然冷淡、疏远、甚至消失——然后对方完全不知道为什么。你以为你在表达不满，其实你只是在制造困惑。\n\n你有一种独特的敏感性——但你把这种敏感性用在了错误的地方。你对「别人的评价」过于敏感，对「被拒绝」过于敏感，对「气氛中的微妙变化」过于敏感。你的情绪经常被别人的一个眼神、一句话就搞得一团糟，然后你还怪自己太敏感。\n\n你还有一个大问题：你很难直接表达你的需求和感受。你觉得说出来太丢人了，太脆弱了，太不像你了。所以你用沉默、用疏离、用「我没事」来代替真正的沟通。然后你委屈——为什么没人知道我在想什么？但问题是，你有没有给过别人机会知道？\n\n你的「活在当下」有时候是一种逃避——逃避深度，逃避责任，逃避承认「我其实对未来有期待，但我不敢说出来」。你把「我活在当下」当成不做计划的借口，然后你还觉得自己很洒脱。但真正洒脱的人是可以谈未来的，他们只是选择专注于现在而已。\n\n你的斯莱特林属性让你有一种「我知道什么是对的」的内核——但这个内核有时候只是固执，不是真的知道自己想要什么。你需要区分：你是在「忠于自己」，还是在「逃避现实」。",
+"ESTP":"ESTP的享乐主义是有代价的——派对结束后那种空虚，你总是假装感受不到。\n\n你活在表层。你逃避那些需要深入的东西，逃避任何可能让你停下来面对自己的机会。你永远在找刺激，找新鲜感，找下一个好玩的——因为一旦停下来，你就得面对那些你一直在逃避的问题。什么问题？「我的人生除了玩，还有什么？」这个问题，你不敢想。\n\n你对「深度」有一种本能的抗拒。你觉得深度是无聊的、沉重的、麻烦的——所以你永远选择浅的、轻松的、即时满足的。你在表面上活得风生水起，但你的内心世界可能比你以为的贫瘠得多。\n\n你还有一个问题：你太习惯「被关注」了。当你不是焦点的时候，你会焦虑。你需要有人看你，有人陪你，有人给你正向反馈——没有这些，你会觉得自己不重要。所以你总是在找人群，找活动，找任何可以让你成为中心的机会。\n\n你对承诺有一种本能的逃避。你可以在热恋期说「我爱你」，但当关系需要你承担责任、需要你做出牺牲、需要你在无聊的时候还留下的时候，你就会开始找借口、找理由、找「这段关系是不是真的适合我」的证据。\n\n你的格兰芬多勇气是真实的，但真正的勇气不是永远追逐新鲜的刺激，真正的勇气是敢于和一个选择、一个承诺、一段关系深度相处，哪怕它变得无聊了。\n\n你活在当下——但如果你永远不往下走，你就永远只有表面上的热闹，内心深处的孤独，永远无法被任何人看见。",
+"ESFP":"你是派对的气氛担当，你把快乐带给所有人——但你自己是真的快乐吗？还是只是习惯了表演快乐？\n\n你有一个很大的问题：你很难真正和一个人亲密。你可以在人群里笑得很开心，可以和所有人打成一片，但当你需要和一个人真正深交、需要把自己交出去、需要接受「他看见真正的我了吗」这个挑战的时候，你会逃。你的「我太独立了」只是「我不敢依赖别人」的另一种说法。\n\n你害怕被看穿。你需要在别人面前永远展示那个「快乐的、有趣的、充满能量的」版本的你，因为你觉得真正的你——那个会脆弱的、会孤独的、会在深夜突然emo的你——不会被别人喜欢。所以你永远在表演，永远在撑着，永远在假装「我很好」。\n\n你用「热情」来掩盖你的焦虑。你害怕冷场，害怕没有人看你，害怕被遗忘。所以你总是那个最先开口的人，最先提议的人，最先调动气氛的人——因为如果你不这样做，你就会感到不安。\n\n你对「被需要」的渴望有时候是病态的。你需要很多人喜欢你，你需要有很多人围绕着你，你需要你的社交账号有很多赞——但这些真的能填补你吗？还是你只是在用更多的「被关注」来填补一个永远填不满的洞？\n\n你的格兰芬多热情是真实的，但热情不等于真实。你需要学会展示那个「不那么有趣」的你，因为那才是你。真正的朋友，不是喜欢你表演出来的样子的人，而是愿意接受你真实样子的人。\n\n你活在当下——但如果你永远不往下走，你就永远只有表面上的热闹，内心深处的孤独，永远无法被任何人看见。"
+};
+
+// ============================================================
+// 【第三部分：核心计算引擎 · 科学版】
+// ============================================================
+
+var curVer="75", questions=[], answers={}, result=null;
+
+function load(ver){
+  curVer=ver;
+  questions=QUESTIONS[ver]||[];
+  answers={};
+  restoreAnswers();
+  render();
+}
+
+function render(){
+  var box=document.getElementById("qBox");
+  var h="";
+  for(var i=0;i<questions.length;i++){
+    var qi=questions[i];
+    // 移除标签显示，防止测试者揣测题目意图
+    h+='<div class="qcard fadein" id="q'+i+'">';
+    h+='<div class="qnum">'+(i+1)+'</div>';
+    h+='<div class="qtxt">'+qi.q+'</div>';
+    h+='<div class="opts">';
+    for(var j=0;j<qi.ops.length;j++){
+      var op=qi.ops[j];
+      var ck=answers[i]===j?" sel":"";
+      h+='<div class="opt'+ck+'" data-i="'+i+'" data-j="'+j+'">';
+      h+='<input type="radio" name="q'+i+'" value="'+j+'"'+(answers[i]===j?" checked":"")+' data-s="'+esc(JSON.stringify(op.score))+'">';
+      h+='<label>'+String.fromCharCode(65+j)+'. '+op.t+'</label>';
+      h+='</div>';
+    }
+    h+='</div></div>';
+  }
+  box.innerHTML=h;
+  bindClicks();
+  updateProgress();
+}
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function bindClicks(){
+  var opts=document.querySelectorAll(".opt");
+  for(var k=0;k<opts.length;k++){
+    opts[k].addEventListener("click",handleClick);
+  }
+}
+
+function handleClick(e){
+  var el=e.currentTarget;
+  var qi=parseInt(el.getAttribute("data-i"));
+  var oj=parseInt(el.getAttribute("data-j"));
+  answers[qi]=oj;
+  var cards=document.querySelectorAll("#q"+qi+" .opt");
+  for(var k=0;k<cards.length;k++){
+    cards[k].classList.remove("sel");
+    cards[k].querySelector("input").checked=false;
+  }
+  el.classList.add("sel");
+  el.querySelector("input").checked=true;
+  saveAnswers();
+  updateProgress();
+}
+
+function updateProgress(){
+  var tot=questions.length;
+  var ans=Object.keys(answers).length;
+  var pct=tot>0?Math.round(ans/tot*100):0;
+  document.getElementById("ptxt").textContent="第 "+(ans+1)+" 题 / 共 "+tot+" 题";
+  document.getElementById("ppct").textContent=pct+"%";
+  document.getElementById("pbar").style.width=pct+"%";
+}
+
+function saveAnswers(){
+  try{localStorage.setItem("quiz_v3_"+curVer,JSON.stringify(answers));}catch(e){}
+}
+
+function restoreAnswers(){
+  try{
+    var d=localStorage.getItem("quiz_v3_"+curVer);
+    if(d)answers=JSON.parse(d);
+  }catch(e){answers={};}
+}
+
+// ---- 科学版评分算法 ----
+function calc(){
+  var raw={},   // 原始加权总分
+      counts={}, // 各维度有效题目数
+      weights={}; // 各维度权重总和
+
+  // 1. 加权累加（IRT简化：权重反映区分度）
+  for(var qi in answers){
+    var q=questions[qi];
+    var oj=answers[qi];
+    var op=q.ops[oj];
+    var w=q.weight||1.0;
+
+    for(var dim in op.score){
+      if(!op.score.hasOwnProperty(dim))continue;
+      var val=op.score[dim];
+      if(typeof val!=="number")continue;
+      raw[dim]=raw[dim]||0;
+      raw[dim]+=val*w;
+      weights[dim]=weights[dim]||0;
+      weights[dim]+=Math.abs(w);
+      counts[dim]=(counts[dim]||0)+1;
+    }
+  }
+
+  // 2. 标准化：各维度转换为 [0, 100] 连续分数
+  // 正向维度：S, T, J, E 越高越好
+  // 负向维度：I, N, F, P 越高越好（但已用分值编码，正负分开存储）
+  var E_raw=raw.E||0, Iv_raw=raw.I||0;
+  var Sv_raw=raw.S||0, Nv_raw=raw.N||0;
+  var Tv_raw=raw.T||0, Fv_raw=raw.F||0;
+  var Jv_raw=raw.J||0, Pv_raw=raw.P||0;
+
+  // 计算极性分数（正负相消后的方向强度）
+  var E_sc=E_raw-Iv_raw, I_sc=Iv_raw-E_raw;
+  var Sv_sc=Sv_raw-Nv_raw, N_sc=Nv_raw-Sv_raw;
+  var Tv_sc=Tv_raw-Fv_raw, F_sc=Fv_raw-Tv_raw;
+  var Jv_sc=Jv_raw-Pv_raw, P_sc=Pv_raw-Jv_raw;
+
+  var mbti=(E_sc>=0?"E":"I")+(Sv_sc>=0?"S":"N")+(Tv_sc>=0?"T":"F")+(Jv_sc>=0?"J":"P");
+
+  // 3. 连续维度分数（0-100百分比）
+  var maxPerDim=weights.E||10; // 理论最大值估计
+  var E_pct=Math.max(0,Math.min(100,Math.round((E_sc/(maxPerDim*2)+0.5)*100)));
+  var N_pct=Math.max(0,Math.min(100,Math.round((N_sc/(maxPerDim*2)+0.5)*100)));
+  var F_pct=Math.max(0,Math.min(100,Math.round((F_sc/(maxPerDim*2)+0.5)*100)));
+  var P_pct=Math.max(0,Math.min(100,Math.round((P_sc/(maxPerDim*2)+0.5)*100)));
+
+  // 4. 九型人格（基于各类型题目得分）
+  var en=1,emx=0;
+  for(var i=1;i<=9;i++){
+    var v=raw["Enneagram"+i]||0;
+    if(v>emx){emx=v;en=i;}
+  }
+
+  // 5. 学院归属
+  var hs={"格兰芬多":raw.Gryffindor||0,"赫夫帕夫":raw.Hufflepuff||0,"拉文克劳":raw.Ravenclaw||0,"斯莱特林":raw.Slytherin||0};
+  var hkeys=Object.keys(hs);hkeys.sort(function(a,b){return hs[b]-hs[a]});var house=hkeys[0];
+
+  // 6. 气质类型
+  var ts={"多血质":raw.Sanguine||0,"胆汁质":raw.Choleric||0,"抑郁质":raw.Melancholic||0,"粘液质":raw.Phlegmatic||0};
+  var tkeys=Object.keys(ts);tkeys.sort(function(a,b){return ts[b]-ts[a]});var temp=tkeys[0];
+
+  // 7. 效度检测
+  var sdScore=raw.socialDesirability||0;
+  var authScore=raw.authenticity||0;
+  var consistencyScore=checkConsistency();
+  var validityScore=calcValidity(sdScore,authScore,consistencyScore);
+
+  return{
+    mbti:mbti,en:en,house:house,temp:temp,
+    E_pct:E_pct,N_pct:N_pct,F_pct:F_pct,P_pct:P_pct,
+    E_sc:E_sc,I_sc:I_sc,Sv_sc:Sv_sc,N_sc:N_sc,Tv_sc:Tv_sc,F_sc:F_sc,Jv_sc:Jv_sc,P_sc:P_sc,
+    sdScore:sdScore,authScore:authScore,consistencyScore:consistencyScore,validityScore:validityScore,
+    raw:raw
+  };
+}
+
+function checkConsistency(){
+  // 一致性检测：某些题目应该和反向题/相关题方向一致
+  var score=0;
+  var checks=[
+    // [qIndex1, qIndex2, sameDirection: true/false]
+    // ei1和ei7r方向应一致
+    [0,6,true],
+  ];
+  for(var i=0;i<checks.length;i++){
+    var c=checks[i];
+    if(answers[c[0]]!==undefined&&answers[c[1]]!==undefined){
+      var q1=questions[c[0]];
+      var q2=questions[c[1]];
+      var o1=q1.ops[answers[c[0]]];
+      var o2=q2.ops[answers[c[1]]];
+      var dir1=o1.score.I-o1.score.E;
+      var dir2=o2.score.I-o2.score.E;
+      if(c[2]){
+        // 同向：两个I-E方向应该相似
+        score+=Math.max(0,3-Math.abs(dir1-dir2));
+      }
+    }
+  }
+  return score;
+}
+
+function calcValidity(sdScore,authScore,consistencyScore){
+  // 效度分数：0-100，>70为高可信，40-70中等，<40需谨慎解读
+  var v=100;
+  // 社会赞许分数过高（虚假正向）→ 扣分
+  if(sdScore>3)v-=Math.min(30,sdScore*8);
+  // 真实性低 → 扣分
+  if(authScore<0)v-=Math.abs(authScore)*15;
+  // 一致性低 → 扣分
+  if(consistencyScore<2)v-=(2-consistencyScore)*20;
+  return Math.max(0,Math.min(100,Math.round(v)));
+}
+
+function niceD(r){
+  var txt = ND[r.mbti]||"你是一个独特而丰富的人。";
+  // 动态替换学院归属，避免与计算结果不一致
+  txt = txt.replace(/学院归属是[^。\n]+——/g, "学院归属是"+r.house+"——");
+  txt = txt.replace(/你的[^学]*学院归属[^。\n]*/g, "你的学院归属是"+r.house);
+  return txt;
+}
+
+function truthD(r){
+  var txt = TD[r.mbti]||"你的组合很复杂，但别让「特别」成为逃避成长的借口。";
+  // 动态替换学院归属，避免与计算结果不一致
+  txt = txt.replace(/你的[^学]*学院归属[^。\n]*/g, "你的学院归属是"+r.house);
+  txt = txt.replace(/你的[^的]*(格兰芬多|赫夫帕夫|拉文克劳|斯莱特林)[属特]/g, "你的"+r.house+"属");
+  return txt;
+}
+
+function getValidityWarning(r){
+  var parts=[];
+  if(r.validityScore<40){
+    parts.push("⚠️ 你的作答存在明显的社会赞许倾向（效度分仅"+r.validityScore+"%），结果可能过度美化，建议重新作答时更真实地选择。");
+  }else if(r.validityScore<70){
+    parts.push("💡 你的作答效度为"+r.validityScore+"%，结果具有一定参考性，但部分维度可能存在偏差。");
+  }else{
+    parts.push("✅ 你的作答效度为"+r.validityScore+"%，结果具有较高可信度。");
+  }
+  return parts.join("");
+}
+
+function showDimBars(r){
+  // EI
+  var eiPct=Math.max(10,Math.min(90,r.E_pct));
+  document.getElementById("dimEI").style.width=eiPct+"%";
+  document.getElementById("dimEIL").textContent=r.E_sc>=0?"E 偏向":"I 偏向";
+  document.getElementById("dimEIpct").textContent=Math.abs(r.E_sc)+"分";
+
+  // SN
+  var snPct=Math.max(10,Math.min(90,r.N_pct));
+  document.getElementById("dimSN").style.width=snPct+"%";
+  document.getElementById("dimSNL").textContent=r.Sv_sc>=0?"S 偏向":"N 偏向";
+  document.getElementById("dimSNpct").textContent=Math.abs(r.Sv_sc)+"分";
+
+  // TF
+  var tfPct=Math.max(10,Math.min(90,r.F_pct));
+  document.getElementById("dimTF").style.width=tfPct+"%";
+  document.getElementById("dimTFL").textContent=r.Tv_sc>=0?"T 偏向":"F 偏向";
+  document.getElementById("dimTFpct").textContent=Math.abs(r.Tv_sc)+"分";
+
+  // JP
+  var jpPct=Math.max(10,Math.min(90,r.P_pct));
+  document.getElementById("dimJP").style.width=jpPct+"%";
+  document.getElementById("dimJPL").textContent=r.Jv_sc>=0?"J 偏向":"P 偏向";
+  document.getElementById("dimJPpct").textContent=Math.abs(r.Jv_sc)+"分";
+}
+
+function showTab(tid){
+  if(!result)return;
+  var isN=tid==="nice",isD=tid==="scores";
+  document.getElementById("rtxt").style.display=isD?"none":"block";
+  document.getElementById("gift").style.display=isD?"none":"block";
+  document.getElementById("scoreDim").style.display=isD?"grid":"none";
+
+  if(!isD){
+    document.getElementById("rtxt").textContent=isN?niceD(result):truthD(result);
+    document.getElementById("gift").textContent="\u{1F381} "+(GM[result.mbti]||"你值得一句专属赠言。");
+    document.getElementById("vtip").textContent=isN?"—— 温柔滤镜版 · 仅供参考":"—— 照妖镜版 · 如有不适说明测对了";
+    document.getElementById("vwarn").classList.remove("show");
+  }else{
+    showDimBars(result);
+    var wtxt=getValidityWarning(result);
+    var dwarn=document.getElementById("vwarn");
+    dwarn.innerHTML=wtxt;
+    dwarn.classList.add("show");
+    document.getElementById("vtip").textContent="—— 四维连续分数 · 效度指标 · 仅供参考";
+    document.getElementById("rtxt").textContent="";
+    document.getElementById("gift").textContent="";
+  }
+
+  var tabs=document.querySelectorAll(".tab");
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle("on",tabs[i].getAttribute("data-t")===tid);
+}
+
+document.getElementById("goBtn").addEventListener("click",function(){
+  if(Object.keys(answers).length<questions.length){
+    for(var i=0;i<questions.length;i++){
+      if(answers[i]===undefined){document.getElementById("q"+i).scrollIntoView({behavior:"smooth",block:"center"});break;}
+    }
+    document.getElementById("errMsg").textContent="请完成全部 "+questions.length+" 道题后再生成报告";
+    return;
+  }
+  document.getElementById("errMsg").textContent="";
+  result=calc();
+  document.getElementById("badge").textContent=result.mbti;
+  document.getElementById("nick").textContent=NK[result.mbti]||"";
+  document.getElementById("av").textContent=result.mbti.slice(0,2);
+  var houseText=result.house?"，学院归属"+result.house:"";
+  var tempText=result.temp?"，气质类型"+result.temp:"";
+  document.getElementById("shareTxt").textContent="我在「人格档案馆」测出了 "+result.mbti+"（"+(NK[result.mbti]||"")+"），九型"+result.en+"号"+houseText+tempText+"。作答效度："+result.validityScore+"%。";
+  document.getElementById("resArea").classList.add("show");
+  showTab("nice");
+  document.getElementById("resArea").scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+var tabs=document.querySelectorAll(".tab");
+for(var i=0;i<tabs.length;i++){
+  tabs[i].addEventListener("click",function(){showTab(this.getAttribute("data-t"));});
+}
+
+document.getElementById("copyBtn").addEventListener("click",function(){
+  // 创建一个用于生成图片的临时容器
+  var card = document.createElement("div");
+  card.className = "result-card";
+  card.style.cssText = "position:fixed;left:-9999px;width:360px;padding:28px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);";
+
+  var houseText = result.house ? result.house : "";
+  var tempText = result.temp ? result.temp : "";
+
+  card.innerHTML =
+    '<div class="logo">✨ 人格档案馆</div>' +
+    '<div class="mbti-type">' + result.mbti + '</div>' +
+    '<div class="mbti-name">' + (NK[result.mbti] || "") + '</div>' +
+    '<div style="margin:16px 0">' +
+      '<span class="tag-line">九型 ' + result.en + ' 号</span>' +
+      (houseText ? '<span class="tag-line">' + houseText + '</span>' : '') +
+      (tempText ? '<span class="tag-line">' + tempText + '</span>' : '') +
+    '</div>' +
+    '<div class="quote">「' + (GM[result.mbti] || "你值得一句专属赠言。") + '」</div>' +
+    '<div class="footer">扫码测测你的性格 →</div>' +
+    '<div style="margin-top:12px;color:#94a3b8;font-size:.7rem">结果仅供参考 · 不构成任何诊断</div>';
+
+  document.body.appendChild(card);
+
+  html2canvas(card, {
+    scale: 2,
+    backgroundColor: null,
+    useCORS: true
+  }).then(function(canvas) {
+    document.body.removeChild(card);
+
+    // 创建下载链接
+    var link = document.createElement("a");
+    link.download = "人格档案馆_" + result.mbti + ".png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    // 显示提示
+    var t = document.getElementById("toast");
+    t.textContent = "图片已保存！";
+    t.style.display = "block";
+    setTimeout(function(){ t.style.display = "none"; }, 2000);
+  }).catch(function(err) {
+    document.body.removeChild(card);
+    console.error("生成图片失败:", err);
+    var t = document.getElementById("toast");
+    t.textContent = "生成失败，请重试";
+    t.style.display = "block";
+    setTimeout(function(){ t.style.display = "none"; }, 2000);
+  });
+});
+
+document.getElementById("reBtn").addEventListener("click",function(){
+  answers={};
+  try{localStorage.removeItem("quiz_v3_"+curVer);}catch(e){}
+  document.getElementById("resArea").classList.remove("show");
+  result=null;
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+document.getElementById("verBtn").addEventListener("click",function(){
+  var ver=document.getElementById("verSel").value;
+  document.getElementById("resArea").classList.remove("show");
+  result=null;
+  load(ver);
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+load("75");
+})();
+</script>
+</body>
+</html>
+
+
+
+
