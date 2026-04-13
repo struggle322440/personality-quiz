@@ -87,14 +87,14 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 <body>
 <div class="wrap">
   <div class="card">
-    <div class="progress-top"><span id="ptxt">第 1 题 / 共 75 题</span><span id="ppct">0%</span></div>
+    <div class="progress-top"><span id="ptxt">第 1 题 / 共 80 题</span><span id="ppct">0%</span></div>
     <div class="bar-bg"><div class="bar-fill" id="pbar" style="width:0"></div></div>
   </div>
   <div class="card">
     <div class="top-bar">
       <div><h1>人格档案馆</h1><div class="sub">多维深度测试 · 暗中校验</div></div>
       <div class="ver-ctrl">
-        <select id="verSel"><option value="40">40题精简</option><option value="75" selected>75题完整</option></select>
+        <select id="verSel"><option value="40">40题精简</option><option value="80" selected>80题完整</option></select>
         <button id="verBtn">切换</button>
       </div>
     </div>
@@ -108,6 +108,7 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
       <button class="tab on" data-t="nice">温柔滤镜</button>
       <button class="tab" data-t="truth">毒舌锐评</button>
       <button class="tab" data-t="scores">维度解读</button>
+      <button class="tab" data-t="advice">成长建议</button>
     </div>
     <div class="rbox">
       <div class="rhead">
@@ -422,10 +423,10 @@ var QUESTIONS={
     {t:"非常慢，反复权衡利弊，犹豫不决",score:{J:1},isDecoy:false}
   ]}
 ],
-"75":[]
+"80":[]
 };
 
-// 完整75题 = 40题基础 + 35题关系维度
+// 完整80题 = 40题基础 + 40题关系维度
 var EQ=[
   // ---- 关系依恋维度 ----
   {id:"rel1",q:"刚在一起时，你最担心的是：",type:"normal",group:"anxietyLove",weight:1.2,ops:[
@@ -639,10 +640,40 @@ var EQ=[
     {t:"比较符合，大部分时候能",score:{socialDesirability:1},isDecoy:true},
     {t:"一般，我有时候也会有偏见",score:{socialDesirability:0},isDecoy:false},
     {t:"不符合，我经常被自己的情绪影响判断",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie6",q:"面对不公正的批评时，你通常能完全保持冷静和客观。",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全能，我从不因批评而情绪波动",score:{socialDesirability:2},isDecoy:true},
+    {t:"大部分时候能，偶尔会有一点点不舒服",score:{socialDesirability:1},isDecoy:true},
+    {t:"不太能，批评会让我不舒服甚至反击",score:{socialDesirability:0},isDecoy:false},
+    {t:"完全不能，不公平的批评会让我非常愤怒",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie7",q:"你是否有这样的经历：明明不想去某个社交活动，但为了不让人失望还是去了？",type:"socialDesirability",group:"lie",weight:0.5,ops:[
+    {t:"从来没有，我的时间完全由自己决定",score:{socialDesirability:2},isDecoy:true},
+    {t:"很少有，基本能坚持自己的意愿",score:{socialDesirability:1},isDecoy:true},
+    {t:"偶尔有，看对方是谁",score:{socialDesirability:0},isDecoy:false},
+    {t:"经常有，我就是那种很难拒绝别人的人",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie8",q:"「我每次做决定前都会充分考虑所有可能的影响。」——你对此的态度？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全符合，我做事从来都是深思熟虑",score:{socialDesirability:2},isDecoy:true},
+    {t:"大部分符合，重大决定一定会",score:{socialDesirability:1},isDecoy:true},
+    {t:"一般，看事情的重要性",score:{socialDesirability:0},isDecoy:false},
+    {t:"不符合，我经常凭直觉做决定然后后悔",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie9",q:"你觉得自己是一个从不嫉妒、从不记仇的人吗？",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"是的，我从不嫉妒也从不记仇",score:{socialDesirability:2},isDecoy:true},
+    {t:"基本是的，这些情绪很少出现",score:{socialDesirability:1},isDecoy:true},
+    {t:"偶尔会有，但很快就能放下",score:{socialDesirability:0},isDecoy:false},
+    {t:"不是，嫉妒和记仇都是人之常情",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  {id:"lie10",q:"面对一个你不喜欢但不得不合作的人，你通常能保持完全的专业和友善。",type:"lie",group:"lie",weight:0.5,ops:[
+    {t:"完全可以，公事公办不带私人感情",score:{socialDesirability:2},isDecoy:true},
+    {t:"基本可以，偶尔内心有波动",score:{socialDesirability:1},isDecoy:true},
+    {t:"表面可以，内心会有些抗拒",score:{socialDesirability:0},isDecoy:false},
+    {t:"很难，我这个人情绪都写在脸上",score:{socialDesirability:-1},isDecoy:false}
   ]}
 ];
 
-QUESTIONS["75"] = QUESTIONS["40"].concat(EQ);
+QUESTIONS["80"] = QUESTIONS["40"].concat(EQ);
 
 // ============================================================
 // 【第二部分：命名与解读】
@@ -706,11 +737,30 @@ var TD={
 "ESFP":"你是派对的气氛担当，你把快乐带给所有人——但你自己是真的快乐吗？还是只是习惯了表演快乐？\n\n你有一个很大的问题：你很难真正和一个人亲密。你可以在人群里笑得很开心，可以和所有人打成一片，但当你需要和一个人真正深交、需要把自己交出去、需要接受「他看见真正的我了吗」这个挑战的时候，你会逃。你的「我太独立了」只是「我不敢依赖别人」的另一种说法。\n\n你害怕被看穿。你需要在别人面前永远展示那个「快乐的、有趣的、充满能量的」版本的你，因为你觉得真正的你——那个会脆弱的、会孤独的、会在深夜突然emo的你——不会被别人喜欢。所以你永远在表演，永远在撑着，永远在假装「我很好」。\n\n你用「热情」来掩盖你的焦虑。你害怕冷场，害怕没有人看你，害怕被遗忘。所以你总是那个最先开口的人，最先提议的人，最先调动气氛的人——因为如果你不这样做，你就会感到不安。\n\n你对「被需要」的渴望有时候是病态的。你需要很多人喜欢你，你需要有很多人围绕着你，你需要你的社交账号有很多赞——但这些真的能填补你吗？还是你只是在用更多的「被关注」来填补一个永远填不满的洞？\n\n你的格兰芬多热情是真实的，但热情不等于真实。你需要学会展示那个「不那么有趣」的你，因为那才是你。真正的朋友，不是喜欢你表演出来的样子的人，而是愿意接受你真实样子的人。\n\n你活在当下——但如果你永远不往下走，你就永远只有表面上的热闹，内心深处的孤独，永远无法被任何人看见。"
 };
 
+var GD={
+"INTJ":"【成长建议】\n\n🌱 个人成长\n你的核心课题是学会「接受不完美」。你对自己和他人的标准太高，导致你经常感到失望。试着把「足够好」作为新标准——不是降低要求，而是承认完美是追求的方向而非终点。练习每周做一件「没有明确目的」的事，比如漫无目的地散步、看一本跟工作无关的书，让大脑的效率模式偶尔休息一下。\n\n💕 恋爱建议\n你需要学会「先表达后分析」。当你想给伴侣建议时，先问一句：「你现在需要的是建议，还是只是想让我听着？」学会在关系里示弱——分享你的焦虑和不安全感，远比永远做一个「解决问题的人」更有力量。你的伴侣不需要你完美，只需要你真实。\n\n💼 职场建议\n你是天生的战略家，但别把所有时间花在规划上。设定一个「70%决策法则」——信息收集到70%就做决定，而不是等到100%。学会把一些决策权下放，信任团队成员。你不是唯一能做对的人。",
+"INTP":"【成长建议】\n\n🌱 个人成长\n你的大脑是一座永不停歇的图书馆，但图书馆不是用来待着不出来的。强迫自己每周把一个想法变成行动——哪怕只是写下来、做一个小原型、跟人讨论一次。你的思考能力远超常人，但如果永远只停留在思考阶段，那就是一种浪费。\n\n💕 恋爱建议\n你的情感丰富程度远超你的表达能力。你不需要完美的措辞才能开口——「我不知道怎么说，但我在乎你」这句话比任何精心组织的话术都更有力量。学会主动表达，哪怕笨拙，也比沉默好一百倍。\n\n💼 职场建议\n你最大的竞争力不是「想得多」，而是「想得深」——但你需要找到一种方式让别人看到这种深度。定期输出成果（写文档、做演示、分享见解），不要只活在脑子里。找到需要深度思考的角色，你的价值会指数级放大。",
+"ENTJ":"【成长建议】\n\n🌱 个人成长\n你的控制欲是披着「效率」外衣的恐惧——害怕失控，害怕被证明不够好。试着每周做一件「完全不受你控制」的事，比如让别人主导一次聚会、尝试一种你无法预测结果的活动。真正的强大不是掌控一切，而是在失控时依然能找到方向。\n\n💕 恋爱建议\n你习惯用「解决问题」来回应伴侣的情绪，但大多数时候对方需要的不是方案，而是「我看见你了」。练习在伴侣倾诉时只说三句话：「我在」「我理解」「你想要我做什么」。别急着给答案，有时候倾听本身就是最好的回应。\n\n💼 职场建议\n你的执行力是天赋，但你需要学一件事：不是每个人都需要你的效率。学会区分「需要推动的人」和「需要空间的人」。你越擅长赋能他人，你的领导力就越持久。",
+"ENTP":"【成长建议】\n\n🌱 个人成长\n你有800个想法在跑，但你需要学会「一个就够了」。每次产生新想法时，问自己：这个能替代我手头的项目吗？如果不能，先记下来，然后回到原来的事情上。深度完成一件事带来的成就感，远比浅尝80件事更持久。\n\n💕 恋爱建议\n你的有趣是你的魅力，但你不能永远只靠有趣来维持关系。深度不是无聊——是信任、是安全感、是「我愿意在你面前做一个不酷的人」。学会在关系里停下来，认真对待一个人，哪怕这意味着放弃其他可能性。\n\n💼 职场建议\n你的创新力是稀缺资源，但你需要一个搭档——一个能帮你把想法落地的人。不要什么都自己来，找到互补的伙伴，你负责「想」，让别人负责「做」。你的职业生涯上限取决于你能把多少个想法变成现实。",
+"INFJ":"【成长建议】\n\n🌱 个人成长\n你把太多能量给了别人，以至于「照顾自己」这件事永远排在最后。你需要一个硬性规则：每周至少有半天时间，只做让自己开心的事——不是「应该」做的事，不是「对别人有帮助」的事，而是纯粹的、自私的、只为你自己的快乐。这不是自私，是必要的自我维护。\n\n💕 恋爱建议\n你的「我能感觉到你不开心」是天赋，但别让它变成控制。当你察觉到对方情绪低落时，先问一句再行动：「你需要我的帮助，还是你自己能处理？」尊重对方处理情绪的方式，不一定要你去拯救。\n\n💼 职场建议\n你的洞察力是稀缺的，但你需要学会更果断地行动。别花太多时间在「预判所有可能性」上——信任你的直觉，快速试错。找到一个能发挥你深度共情能力的领域（咨询、教育、用户体验），你的价值会远超常规岗位。",
+"INFP":"【成长建议】\n\n🌱 个人成长\n你的内心世界很美，但你不能永远只活在里面。设定一个「最小行动法则」——每个让你感到焦虑或不满意的事情，至少迈出最小的第一步。你不需要完美的计划，只需要一个开始。哪怕走错了，也比站在原地好。\n\n💕 恋爱建议\n你的情绪化不是缺点，但你需要学会区分「真实的感受」和「被放大的情绪」。当情绪来临时，给自己15分钟冷静期，然后再决定怎么沟通。学会说「我现在情绪不太好，给我一点时间」——这比突然冷战或爆发都好得多。\n\n💼 职场建议\n你的价值观和创造力是独特优势，但你需要找到一种方式把它们变现。不要抗拒商业化——「用我信仰的方式赚钱」和「背叛信仰」不是一回事。找到你的细分领域，深耕下去，你会成为不可替代的人。",
+"ENFJ":"【成长建议】\n\n🌱 个人成长\n你的能量太分散了——你照顾了所有人，却忘了自己也需要被照顾。建立一个「能量预算」意识：每次你给别人的关心和帮助，都是一笔支出。学会识别哪些人值得你投入，哪些人只是在消耗你。对不值得的人说「不」，不是冷漠，是对自己的尊重。\n\n💕 恋爱建议\n你太擅长让伴侣依赖你了，但健康的依赖是双向的。学会暴露自己的脆弱——当你真的累了、委屈了、需要帮助时，说出来。让伴侣有机会照顾你，这不是示弱，是给予对方表达爱的机会。\n\n💼 职场建议\n你的领导力和影响力是真实的，但你需要建立边界感。不是每个项目都需要你参与，不是每个人都值得你的时间。学会战略性拒绝，把精力留给真正重要的人和事。你的影响力不在于做了多少，在于做得有多好。",
+"ENFP":"【成长建议】\n\n🌱 个人成长\n你最大的挑战不是「不专注」，而是「不敢专注」。专注意味着放弃其他可能性，而放弃让你焦虑。但真相是：深度投入一件事带来的快乐，远比浅浅体验一百件事更真实。试试「3个月法则」——对任何新事物至少坚持3个月再做去留决定。\n\n💕 恋爱建议\n你太擅长让刚认识的人觉得自己是特别的，但「让每个人都觉得特别」恰恰意味着「没有谁是真正特别的」。学会区分新鲜感吸引和真正的情感连接。当一段关系开始变平淡时，不要急着寻找新的刺激——平淡的信任感才是最深的亲密。\n\n💼 职场建议\n你的创意和沟通能力是顶级的，但你需要一个锚点。找到一个让你持续好奇的领域，深耕5年。频繁跳槽和切换赛道会让你变成「什么都知道一点但什么都不精」的人。深度+广度的组合，才是你的终极武器。",
+"ISTJ":"【成长建议】\n\n🌱 个人成长\n你的稳定性是最大的优势，也可能是最大的限制。试着每年做一件「完全不符合计划」的事——学一个新技能、去一个没去过的城市、接触一个不同圈子的人。不是要你变成另一个人，而是让稳定性变成一个选择，而不是一个牢笼。\n\n💕 恋爱建议\n你说你用行动表达爱，但你有没有想过，有时候行动无法被感知到？当你修好了她/他的电脑、准备好了雨天的伞——如果对方不知道这是你刻意做的，它就只是「巧合」。学会说出口：「我做这个是因为你在乎。」言语不是行动的敌人，是行动的放大器。\n\n💼 职场建议\n你的执行力无可挑剔，但你需要培养「战略视野」。不要只做一个执行者，定期抬起头来看看行业趋势、技术变化、团队方向。当变化来临时，你的适应力是关键。提前准备Plan B不是不忠，是成熟。",
+"ISFJ":"【成长建议】\n\n🌱 个人成长\n你的那本心里的账本——你知道的，记录着每个人对你的好与不好。是时候学着翻篇了。不是要你忘记，而是不让它成为你情绪的主控器。每次你翻到一页让你不舒服的记录时，对自己说：「我可以选择不记得这一条。」这不是软弱，是放过自己。\n\n💕 恋爱建议\n你不敢说「不」的习惯正在慢慢侵蚀你的关系——不是一次，而是千百次的积累。每次你委屈自己说「好的」，对方不会知道你的牺牲，只会以为你真的觉得「好的」。你需要练习：当心里不舒服时，先说出来，再决定怎么做。\n\n💼 职场建议\n你的默默付出经常被忽视——不是因为你做得不好，而是因为你做了却不说。学会定期向上汇报你的成果和价值。这不叫邀功，这叫「让别人知道你在做什么」。在职场中，可见度和能力一样重要。",
+"ESTJ":"【成长建议】\n\n🌱 个人成长\n你的世界里「对错」太清晰了，但人生不是考试。很多事情没有标准答案——什么时候辞职、和谁在一起、住在哪里——这些问题的答案不是A或B，而是「你能不能接受每种选择的代价」。练习容忍模糊性，允许一些事情处于「不确定」的状态。\n\n💕 恋爱建议\n你需要知道一件事：你的伴侣不是你的下属。你不能用「效率」和「结果」来要求一段感情。感情里最珍贵的东西——陪伴、倾听、安全感——都是「低效率」的。学会把「感情时间」和「工作时间」分开，在两者之间切换模式。\n\n💼 职场建议\n你的管理风格强势高效，但你需要学会一个词：「赋能」。不要只盯着结果，关注团队成员的成长。当你能让每个人都在你的影响下变得更好时，你的领导力就从「管理」升级为「领导」了。",
+"ESFJ":"【成长建议】\n\n🌱 个人成长\n你的价值感不应该绑在「被需要」上。试着做一件事：每周为自己做一件别人不知道的好事——给自己买一束花、做一顿好饭、安排一次独处的散步。这些不需要观众的小事，才是建立内在自我价值感的开始。\n\n💕 恋爱建议\n你的付出让人感动，但「让人感动」和「让人窒息」之间只差一条线。学会后退一步——当对方说「我没事」的时候，相信TA。你不需要时刻在身边才表示你在乎。给彼此空间，信任对方能处理好自己的情绪和问题。\n\n💼 职场建议\n你的情商和团队建设能力是顶级资源。不要只做一个「照顾者」角色，你可以成为一个出色的团队领袖。关键是学会在照顾他人的同时维护自己的边界——你的善良需要配上果断，才是真正的领导力。",
+"ISTP":"【成长建议】\n\n🌱 个人成长\n你用「无所谓」来掩饰在乎，但这让你越来越难被理解。试着做一件简单的事：每天告诉一个人你的真实感受——「这件事让我有点烦」「我觉得这个想法不错」。不需要长篇大论，两三句话就够了。你的沉默不是酷，是一道墙。\n\n💕 恋爱建议\n你以为「有问题就解决问题」就是爱，但很多时候你的伴侣需要的是情感连接，不是解决方案。练习先回应情绪，再回应问题。一句「我理解你为什么难过」比十句「你应该这样做」更有效。\n\n💼 职场建议\n你的动手能力和冷静判断是稀缺的，但你需要学会「展示」自己。不要只做不说——在团队会议中分享你的思考过程，让别人看到你的分析逻辑。你的技术能力和实际解决问题的能力，需要一个「可见度」的升级。",
+"ISFP":"【成长建议】\n\n🌱 个人成长\n你的「随便」正在消耗你自己。每次你说「都可以」的时候，其实你在让渡自己的选择权。练习从小事开始表达偏好——「我更想去这家餐厅」「我更喜欢这部电影」。表达偏好不是固执，是让别人知道你是谁。你的真实比你的随和更值得被看见。\n\n💕 恋爱建议\n你用沉默来保护自己，但沉默在亲密关系里是一种惩罚——即使你并不打算惩罚对方。学会用「我觉得……」来代替沉默。你的感受是正当的，说出来不会被嘲笑，但不说出来一定会被忽视。\n\n💼 职场建议\n你的审美和创造力是独一无二的商业价值。不要只把你的艺术感留给自己——在设计、品牌、用户体验等领域，你的「感觉」就是最硬的实力。找到能把审美变现的工作，你会在热爱中找到成就感。",
+"ESTP":"【成长建议】\n\n🌱 个人成长\n你逃避深度不是因为你浅薄，而是因为你害怕安静。安静的时候，那些被你压下去的问题会浮上来。别再靠刺激来逃避了——给自己一个「独处时间」，哪怕只是每天15分钟。学会和自己的内心对话，你会发现里面的东西没你想的那么可怕。\n\n💕 恋爱建议\n你害怕承诺，因为承诺意味着放弃其他可能性。但真正的自由不是「随时可以走」，而是「选择留下」。当你在一段关系中感到无聊时，先问自己：是我厌倦了这个人，还是我只是需要一些新鲜的共同经历？后者可以通过一起尝试新事物来解决。\n\n💼 职场建议\n你的行动力和适应力是顶级天赋。找一个节奏快、变化多的环境，这是你的主场。但你也需要学会一件反直觉的事：偶尔慢下来，做一个长期规划。你最强的竞争力是「快速行动+深度思考」的组合，而不是只有快速行动。",
+"ESFP":"【成长建议】\n\n🌱 个人成长\n你害怕独处，因为独处意味着面对那个「不那么有趣」的自己。但那个不有趣的自己才是真的你。练习每天独处20分钟，不带手机，不做任何事——只是待着。你会开始认识真正的自己，而你会发现，真正的你比表演出来的你更值得被爱。\n\n💕 恋爱建议\n你在人群中发光，但亲密关系需要的是「只有你能看见的光」。学会在一个人面前放下表演——分享你的恐惧、你的无聊、你的不安。真正的亲密不是一直有趣，而是在无聊的时刻依然选择待在一起。\n\n💼 职场建议\n你的感染力和表现力是天然的销售和公关才能。但你需要培养「幕后的能力」——数据分析、项目管理、策略规划。如果你只有台前的魅力而没有幕后的实力，你的职业生涯会像烟花一样漂亮但短暂。台上+台下的结合，才是长久的优势。"
+};
+
 // ============================================================
 // 【第三部分：核心计算引擎 · 科学版】
 // ============================================================
 
-var curVer="75", questions=[], answers={}, result=null;
+var curVer="80", questions=[], answers={}, result=null;
 
 function load(ver){
   curVer=ver;
@@ -831,12 +881,12 @@ function calc(){
 
   var mbti=(E_sc>=0?"E":"I")+(Sv_sc>=0?"S":"N")+(Tv_sc>=0?"T":"F")+(Jv_sc>=0?"J":"P");
 
-  // 3. 连续维度分数（0-100百分比）
-  var maxPerDim=weights.E||10; // 理论最大值估计
-  var E_pct=Math.max(0,Math.min(100,Math.round((E_sc/(maxPerDim*2)+0.5)*100)));
-  var N_pct=Math.max(0,Math.min(100,Math.round((N_sc/(maxPerDim*2)+0.5)*100)));
-  var F_pct=Math.max(0,Math.min(100,Math.round((F_sc/(maxPerDim*2)+0.5)*100)));
-  var P_pct=Math.max(0,Math.min(100,Math.round((P_sc/(maxPerDim*2)+0.5)*100)));
+  // 3. 连续维度分数（0-100百分比，动态计算各维度实际范围）
+  var maxE=Math.abs(raw.E||0)+Math.abs(raw.I||0), maxSN=Math.abs(raw.S||0)+Math.abs(raw.N||0), maxTF=Math.abs(raw.T||0)+Math.abs(raw.F||0), maxJP=Math.abs(raw.J||0)+Math.abs(raw.P||0);
+  var E_pct=maxE>0?Math.round(((E_sc/maxE)*50)+50):50;
+  var N_pct=maxSN>0?Math.round(((N_sc/maxSN)*50)+50):50;
+  var F_pct=maxTF>0?Math.round(((F_sc/maxTF)*50)+50):50;
+  var P_pct=maxJP>0?Math.round(((P_sc/maxJP)*50)+50):50;
 
   // 4. 九型人格（基于各类型题目得分）
   var en=1,emx=0;
@@ -872,23 +922,19 @@ function checkConsistency(){
   // 一致性检测：某些题目应该和反向题/相关题方向一致
   var score=0;
   var checks=[
-    // [qIndex1, qIndex2, sameDirection: true/false]
-    // ei1和ei7r方向应一致
-    [0,6,true],
+    [0,6,"I","E"],    // ei1 与 ei7r
+    [8,14,"S","N"],   // sn1 与 sn7r
+    [32,38,"J","P"],  // jp1 与 jp7r
   ];
   for(var i=0;i<checks.length;i++){
     var c=checks[i];
     if(answers[c[0]]!==undefined&&answers[c[1]]!==undefined){
-      var q1=questions[c[0]];
-      var q2=questions[c[1]];
-      var o1=q1.ops[answers[c[0]]];
-      var o2=q2.ops[answers[c[1]]];
-      var dir1=o1.score.I-o1.score.E;
-      var dir2=o2.score.I-o2.score.E;
-      if(c[2]){
-        // 同向：两个I-E方向应该相似
-        score+=Math.max(0,3-Math.abs(dir1-dir2));
-      }
+      var q1=questions[c[0]], q2=questions[c[1]];
+      var o1=q1.ops[answers[c[0]]], o2=q2.ops[answers[c[1]]];
+      var s1=(o1.score[c[2]]||0)-(o1.score[c[3]]||0);
+      var s2=(o2.score[c[2]]||0)-(o2.score[c[3]]||0);
+      if(s1*s2>0) score+=2; // 同向得2分
+      else if(s1*s2===0) score+=1;
     }
   }
   return score;
@@ -908,17 +954,16 @@ function calcValidity(sdScore,authScore,consistencyScore){
 
 function niceD(r){
   var txt = ND[r.mbti]||"你是一个独特而丰富的人。";
-  // 动态替换学院归属，避免与计算结果不一致
-  txt = txt.replace(/学院归属是[^。\n]+——/g, "学院归属是"+r.house+"——");
-  txt = txt.replace(/你的[^学]*学院归属[^。\n]*/g, "你的学院归属是"+r.house);
+  // 动态替换学院归属和气质类型
+  txt = txt.replace(/学院归属是[^，。\n]+[，—]?/g, "学院归属是"+r.house+"——");
+  txt = txt.replace(/你的气质是[^，。\n]+/g, "你的气质是"+(r.temp||"未知"));
   return txt;
 }
 
 function truthD(r){
   var txt = TD[r.mbti]||"你的组合很复杂，但别让「特别」成为逃避成长的借口。";
-  // 动态替换学院归属，避免与计算结果不一致
-  txt = txt.replace(/你的[^学]*学院归属[^。\n]*/g, "你的学院归属是"+r.house);
-  txt = txt.replace(/你的[^的]*(格兰芬多|赫夫帕夫|拉文克劳|斯莱特林)[属特]/g, "你的"+r.house+"属");
+  txt = txt.replace(/你的([^的]{0,6})?(格兰芬多|赫夫帕夫|拉文克劳|斯莱特林)(属?性?)/g, "你的"+r.house+"$3");
+  txt = txt.replace(/你的([^的]{0,6})?(多血质|胆汁质|抑郁质|粘液质)/g, "你的"+(r.temp||"未知"));
   return txt;
 }
 
@@ -962,12 +1007,17 @@ function showDimBars(r){
 
 function showTab(tid){
   if(!result)return;
-  var isN=tid==="nice",isD=tid==="scores";
-  document.getElementById("rtxt").style.display=isD?"none":"block";
-  document.getElementById("gift").style.display=isD?"none":"block";
+  var isN=tid==="nice",isD=tid==="scores",isA=tid==="advice";
+  document.getElementById("rtxt").style.display=isD||isA?"none":"block";
+  document.getElementById("gift").style.display=isD||isA?"none":"block";
   document.getElementById("scoreDim").style.display=isD?"grid":"none";
 
-  if(!isD){
+  if(isA){
+    document.getElementById("rtxt").textContent=GD[result.mbti]||"暂无成长建议。";
+    document.getElementById("gift").textContent="";
+    document.getElementById("vwarn").classList.remove("show");
+    document.getElementById("vtip").textContent="—— 成长建议 · 仅供参考";
+  }else if(!isD){
     document.getElementById("rtxt").textContent=isN?niceD(result):truthD(result);
     document.getElementById("gift").textContent="\u{1F381} "+(GM[result.mbti]||"你值得一句专属赠言。");
     document.getElementById("vtip").textContent=isN?"—— 温柔滤镜版 · 仅供参考":"—— 照妖镜版 · 如有不适说明测对了";
@@ -1017,7 +1067,7 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   // 创建一个用于生成图片的临时容器
   var card = document.createElement("div");
   card.className = "result-card";
-  card.style.cssText = "position:fixed;left:-9999px;width:360px;padding:28px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);";
+  card.style.cssText = "position:fixed;left:-9999px;max-width:375px;width:90vw;padding:28px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);";
 
   var houseText = result.house ? result.house : "";
   var tempText = result.temp ? result.temp : "";
@@ -1040,7 +1090,8 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   html2canvas(card, {
     scale: 2,
     backgroundColor: null,
-    useCORS: true
+    useCORS: true,
+    windowWidth: 375
   }).then(function(canvas) {
     document.body.removeChild(card);
 
@@ -1082,7 +1133,7 @@ document.getElementById("verBtn").addEventListener("click",function(){
   window.scrollTo({top:0,behavior:"smooth"});
 });
 
-load("75");
+load("80");
 })();
 </script>
 </body>
