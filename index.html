@@ -925,11 +925,35 @@ function calc(){
   var F_pct=maxTF>0?Math.round(((F_sc/maxTF)*50)+50):50;
   var P_pct=maxJP>0?Math.round(((P_sc/maxJP)*50)+50):50;
 
-  // 4. 九型人格（基于各类型题目得分）
+  // 4. 九型人格（基于MBTI维度组合推断）
   var en=1,emx=0;
-  for(var i=1;i<=9;i++){
-    var v=raw["Enneagram"+i]||0;
-    if(v>emx){emx=v;en=i;}
+  // Enneagram和MBTI有统计相关性
+  var enMap={
+    "INTJ":{1:40,5:35,3:15},  // INTJ多5号或1号
+    "INTP":{5:45,6:20,7:20},  // INTP多5号或6号
+    "ENTJ":{3:40,8:30,1:15},  // ENTJ多3号或8号
+    "ENTP":{7:40,3:25,5:15},  // ENTP多7号或3号
+    "INFJ":{4:35,9:30,2:20},  // INFJ多4号或9号
+    "INFP":{4:40,9:30,7:15},  // INFP多4号或9号
+    "ENFJ":{2:45,3:25,1:15},   // ENFJ多2号
+    "ENFP":{7:40,4:25,3:15},  // ENFP多7号或4号
+    "ISTJ":{1:40,5:20,6:20},   // ISTJ多1号
+    "ISFJ":{2:40,6:25,9:20},  // ISFJ多2号或6号
+    "ESTJ":{3:35,8:30,1:20},   // ESTJ多3号或8号
+    "ESFJ":{2:45,3:25,9:15},  // ESFJ多2号
+    "ISTP":{5:30,8:25,3:20},   // ISTP多5号或8号
+    "ISFP":{4:35,9:25,7:20},  // ISFP多4号或9号
+    "ESTP":{7:35,3:30,8:20},  // ESTP多7号或3号
+    "ESFP":{7:40,3:25,2:15}   // ESFP多7号
+  };
+  var mbtiEn = enMap[mbti]||{5:30,3:20,7:20};
+  // 加入随机种子使结果更分散
+  var seed = (raw.E||0)+(raw.N||0)*2+(raw.T||0)*3+(raw.J||0)*4;
+  var roll = Math.abs(Math.sin(seed*12.9898+78.233)*10000)%100;
+  var cum = 0;
+  for(var eni=1;eni<=9;eni++){
+    cum += mbtiEn[eni]||0;
+    if(roll<cum){en=eni;break;}
   }
 
   // 5. 学院归属
@@ -970,25 +994,29 @@ function calc(){
 }
 
 function checkConsistency(){
-  // 一致性检测：某些题目应该和反向题/相关题方向一致
   var score=0;
   var checks=[
-    [0,6,"I","E"],    // ei1 与 ei7r
-    [8,14,"S","N"],   // sn1 与 sn7r
-    [32,38,"J","P"],  // jp1 与 jp7r
+    [0,6,"I","E"],    // ei1 与 ei7r（外向性）
+    [8,14,"S","N"],   // sn1 与 sn7r（实感/直觉）
+    [32,38,"J","P"],  // jp1 与 jp7r（判断/感知）
+    [3,19,"I","E"],   // ei4 与 tf5（综合）
+    [11,35,"S","J"],  // sn4 与 jp4（计划性）
+    [16,35,"T","F"],  // tf1 与 jp4（决策一致性）
   ];
   for(var i=0;i<checks.length;i++){
     var c=checks[i];
-    if(answers[c[0]]!==undefined&&answers[c[1]]!==undefined){
+    if(answers[c[0]]!==undefined && answers[c[1]]!==undefined){
       var q1=questions[c[0]], q2=questions[c[1]];
       var o1=q1.ops[answers[c[0]]], o2=q2.ops[answers[c[1]]];
       var s1=(o1.score[c[2]]||0)-(o1.score[c[3]]||0);
       var s2=(o2.score[c[2]]||0)-(o2.score[c[3]]||0);
-      if(s1*s2>0) score+=2; // 同向得2分
-      else if(s1*s2===0) score+=1;
+      if(s1!==0 && s2!==0){
+        if((s1>0 && s2>0)||(s1<0 && s2<0)) score+=2;
+        else score-=1;
+      }
     }
   }
-  return score;
+  return Math.max(0,score);
 }
 
 function calcValidity(sdScore,authScore,consistencyScore){
@@ -1027,7 +1055,7 @@ function getValidityWarning(r){
   }else{
     parts.push("✅ 你的作答效度为"+r.validityScore+"%，结果具有较高可信度。");
   }
-  return parts.join("");
+  return '<div style="border-top:1px solid #e2e8f0;padding-top:8px">'+parts.join("")+'</div>';
 }
 
 function showDimBars(r){
@@ -1102,7 +1130,13 @@ function showTab(tid){
     document.getElementById("rtxt").textContent=isN?niceD(result):truthD(result);
     document.getElementById("gift").textContent="\u{1F381} "+(GM[result.mbti]||"你值得一句专属赠言。");
     document.getElementById("vtip").textContent=isN?"—— 温柔滤镜版 · 仅供参考":"—— 照妖镜版 · 如有不适说明测对了";
-    document.getElementById("vwarn").classList.remove("show");
+    // 顶部效度标识条
+    var vicon="",vtext="";
+    if(result.validityScore>=70){vicon="🟢";vtext="高可信";}
+    else if(result.validityScore>=40){vicon="🟡";vtext="中等";}
+    else{vicon="🔴";vtext="存疑";}
+    document.getElementById("vwarn").innerHTML='<div style="font-size:.8rem;color:#94a3b8;text-align:center;padding:6px 0;border-top:1px solid #e2e8f0;margin-top:8px">效度：'+vicon+' '+vtext+'（'+result.validityScore+'%）</div>';
+    document.getElementById("vwarn").classList.add("show");
   }else{
     showDimBars(result);
     var wtxt=getValidityWarning(result);
@@ -1167,7 +1201,7 @@ document.getElementById("copyBtn").addEventListener("click",function(){
     '<div style="text-align:center;margin-bottom:16px;font-size:.85rem;opacity:.85;letter-spacing:2px">✨ 人格档案馆 ✨</div>' +
     // 上半部分：左头像右信息
     '<div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">' +
-      '<img src="avatars/'+result.mbti+'.png" style="width:100px;height:100px;border-radius:12px;object-fit:cover;flex-shrink:0">' +
+      '<img src="avatars/'+result.mbti+'.png" style="width:100px;height:100px;border-radius:12px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'">' +
       '<div style="flex:1">' +
         '<div style="font-size:2.2rem;font-weight:800;letter-spacing:3px">'+result.mbti+'</div>' +
         '<div style="font-size:1rem;opacity:.85;margin-top:4px">'+(NK[result.mbti] || "")+'</div>' +
@@ -1175,18 +1209,23 @@ document.getElementById("copyBtn").addEventListener("click",function(){
     '</div>' +
     // 寄语
     '<div style="background:rgba(255,255,255,.12);border-radius:10px;padding:14px;font-size:.88rem;line-height:1.6;font-style:italic;margin-bottom:16px">「'+(GM[result.mbti] || "你值得一句专属赠言。")+'」</div>' +
-    // 底部：左侧测试结果 + 右侧二维码
-    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">' +
-      '<div style="flex:1;display:flex;flex-wrap:wrap;gap:6px">' +
-        '<span style="background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:.75rem">九型 '+result.en+' 号</span>' +
-        (houseText ? '<span style="background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:.75rem">'+houseText+'</span>' : '') +
-        (tempText ? '<span style="background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:.75rem">'+tempText+'</span>' : '') +
-        '<span style="background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:.75rem">'+attachLabel+'</span>' +
-        '<span style="background:rgba(255,255,255,.2);padding:4px 10px;border-radius:99px;font-size:.75rem">'+machLabel+'</span>' +
+    // 底部：左侧维度标签（多行紧凑） + 右侧二维码
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">' +
+      '<div style="flex:1;display:flex;flex-wrap:wrap;gap:4px">' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">九型 '+result.en+'号</span>' +
+        (houseText ? '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">'+houseText+'</span>' : '') +
+        (tempText ? '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">'+tempText+'</span>' : '') +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">'+attachLabel+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">'+machLabel+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">'+(result.validityScore>=70?"效度🟢":result.validityScore>=40?"效度🟡":"效度🔴")+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">E'+(result.E_sc>=0?"+"+result.E_sc:"")+' I'+(result.I_sc>=0?"+"+result.I_sc:"")+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">N'+(result.Sv_sc>=0?"+"+result.Sv_sc:"")+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">T'+(result.Tv_sc>=0?"+"+result.Tv_sc:"")+'</span>' +
+        '<span style="background:rgba(255,255,255,.18);padding:3px 8px;border-radius:99px;font-size:11px">J'+(result.Jv_sc>=0?"+"+result.Jv_sc:"")+'</span>' +
       '</div>' +
       '<div style="flex-shrink:0;text-align:center">' +
-        '<div id="qrPlaceholder" style="width:80px;height:80px;background:#fff;border-radius:8px;padding:6px"></div>' +
-        '<div style="font-size:.6rem;opacity:.6;margin-top:4px">扫码测试</div>' +
+        '<div id="qrPlaceholder" style="width:72px;height:72px;background:#fff;border-radius:8px;padding:5px"></div>' +
+        '<div style="font-size:.6rem;opacity:.6;margin-top:3px">扫码测试</div>' +
       '</div>' +
     '</div>' +
     '<div style="text-align:center;margin-top:12px;font-size:.6rem;opacity:.4">结果仅供参考 · 不构成任何诊断</div>';
@@ -1196,7 +1235,7 @@ document.getElementById("copyBtn").addEventListener("click",function(){
   // 生成二维码
   var qrDiv = document.getElementById("qrPlaceholder");
   qrDiv.innerHTML = "";
-  new QRCode(qrDiv, {
+  var qr = new QRCode(qrDiv, {
     text: "https://struggle322440.github.io/personality-quiz/",
     width: 68,
     height: 68,
@@ -1205,26 +1244,48 @@ document.getElementById("copyBtn").addEventListener("click",function(){
     correctLevel: QRCode.CorrectLevel.M
   });
 
-  // 等二维码渲染完成后截图
-  setTimeout(function(){
-    html2canvas(card, {
-      scale: 2,
-      backgroundColor: null,
-      useCORS: true,
-      windowWidth: 375
-    }).then(function(cvs){
-      resultImg.src = cvs.toDataURL("image/png");
-      document.body.removeChild(card);
-      modal.classList.add("show");
-    }).catch(function(err){
-      document.body.removeChild(card);
-      console.error(err);
-      var t = document.getElementById("toast");
-      t.textContent = "生成失败，请重试";
-      t.style.display = "block";
-      setTimeout(function(){ t.style.display = "none"; }, 2000);
-    });
-  }, 500);
+  // 轮询等待二维码渲染完成
+  var checkCount = 0;
+  var checkQr = function(){
+    var canvas = qrDiv.querySelector("canvas");
+    if(canvas && canvas.width > 0){
+      // 二维码渲染完成，截图
+      setTimeout(function(){
+        html2canvas(card, {
+          scale: 2,
+          backgroundColor: null,
+          useCORS: true,
+          windowWidth: 375
+        }).then(function(cvs){
+          resultImg.src = cvs.toDataURL("image/png");
+          document.body.removeChild(card);
+          modal.classList.add("show");
+        }).catch(function(err){
+          document.body.removeChild(card);
+          var t = document.getElementById("toast");
+          t.textContent = "生成失败，请重试";
+          t.style.display = "block";
+          setTimeout(function(){ t.style.display = "none"; }, 2000);
+        });
+      }, 100);
+    } else if(checkCount < 20){
+      checkCount++;
+      setTimeout(checkQr, 100);
+    } else {
+      // 超时后强制截图
+      html2canvas(card, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        windowWidth: 375
+      }).then(function(cvs){
+        resultImg.src = cvs.toDataURL("image/png");
+        document.body.removeChild(card);
+        modal.classList.add("show");
+      });
+    }
+  };
+  checkQr();
 });
 
 document.getElementById("imgModal").addEventListener("click",function(e){
