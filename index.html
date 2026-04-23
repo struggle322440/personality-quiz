@@ -229,10 +229,10 @@ var QUESTIONS={
     {t:"一个人出门散步，走到哪里算哪里，享受独处",score:{E:-1,I:1,Phlegmatic:1,Ravenclaw:1,avoidance:1},isDecoy:false}
   ]},
   {id:"ei2",q:"你在一个全是陌生人的社交场合，通常会：",type:"normal",group:"EI",weight:1.2,ops:[
-    {t:"主动和周围人攀谈，转换话题也不在话下",score:{E:2,I:-2},isDecoy:false},
-    {t:"等有人来和我说话，我再自然地接话",score:{E:1,I:-1},isDecoy:false},
-    {t:"观察全场，找到最有意思的那个人主动接近",score:{E:1,I:0},isDecoy:false},
-    {t:"安静地待着，偶尔回应一下，保持自己的节奏",score:{E:-2,I:2},isDecoy:false}
+    {t:"主动和周围人攀谈，转换话题也不在话下",score:{E:2,I:-2,Sanguine:2,Gryffindor:1,altruScore:1},isDecoy:false},
+    {t:"等有人来和我说话，我再自然地接话",score:{E:1,I:-1,Phlegmatic:1,stability:1},isDecoy:false},
+    {t:"观察全场，找到最有意思的那个人主动接近",score:{E:1,I:0,Slytherin:2,N:1,machScore:1},isDecoy:false},
+    {t:"安静地待着，偶尔回应一下，保持自己的节奏",score:{E:-2,I:2,Melancholic:1,Ravenclaw:1,avoScore:1},isDecoy:false}
   ]},
   {id:"ei3",q:"如果可以选择，你更愿意花时间在：",type:"normal",group:"EI",weight:1.1,ops:[
     {t:"和各种人深度交流，探索不同的想法",score:{E:2,I:-1},isDecoy:false},
@@ -273,16 +273,16 @@ var QUESTIONS={
   ]},
   // ---- S/N 维度 ----
   {id:"sn1",q:"你描述事情的时候，更习惯用：",type:"normal",group:"SN",weight:1.2,ops:[
-    {t:"具体的数字、事实、时间线，精确描述",score:{S:2,N:-1},isDecoy:false},
-    {t:"比喻、感觉、整体印象，大概的方向",score:{S:-1,N:2},isDecoy:false},
-    {t:"两者结合，看情况决定",score:{S:1,N:1},isDecoy:false},
+    {t:"具体的数字、事实、时间线，精确描述",score:{S:2,N:-1,Ravenclaw:1,J:1,Melancholic:1},isDecoy:false},
+    {t:"比喻、感觉、整体印象，大概的方向",score:{S:-1,N:2,Gryffindor:1,Sanguine:1,P:1},isDecoy:false},
+    {t:"两者结合，看情况决定",score:{S:1,N:1,Hufflepuff:1,stability:1},isDecoy:false},
     {t:"不太注意自己用什么方式，自然而然",score:{S:0,N:0},isDecoy:false}
   ]},
   {id:"sn2",q:"当有人说「我觉得这件事可能会往一个很有意思的方向发展」时，你的反应通常是：",type:"normal",group:"SN",weight:1.3,ops:[
-    {t:"追问：什么方向？依据是什么？",score:{S:2,N:-1},isDecoy:false},
-    {t:"兴奋起来：真的吗？说说看！",score:{S:-1,N:2},isDecoy:false},
-    {t:"先想想这在现实中可不可行",score:{S:2,N:-2},isDecoy:false},
-    {t:"嗯嗯，然后等他继续说",score:{S:0,N:1},isDecoy:false}
+    {t:"追问：什么方向？依据是什么？",score:{S:2,N:-1,Ravenclaw:1,T:1,Phlegmatic:1},isDecoy:false},
+    {t:"兴奋起来：真的吗？说说看！",score:{S:-1,N:2,Gryffindor:1,Sanguine:1,E:1},isDecoy:false},
+    {t:"先想想这在现实中可不可行",score:{S:2,N:-2,Ravenclaw:1,J:1,stability:1},isDecoy:false},
+    {t:"嗯嗯，然后等他继续说",score:{S:0,N:1,Hufflepuff:1,avoScore:1},isDecoy:false}
   ]},
   {id:"sn3",q:"你更容易被什么吸引？",type:"normal",group:"SN",weight:1.1,ops:[
     {t:"具体的应用、实际的效果、能解决什么问题",score:{S:2},isDecoy:false},
@@ -323,10 +323,10 @@ var QUESTIONS={
   ]},
   // ---- T/F 维度 ----
   {id:"tf1",q:"朋友向你倾诉工作很累，你的反应通常是：",type:"normal",group:"TF",weight:1.3,ops:[
-    {t:"「要不要帮你分析一下，看哪里可以调整？」",score:{T:2,N:1},isDecoy:false},
-    {t:"「抱抱，辛苦了，周末带你去吃好的。」",score:{F:2},isDecoy:false},
-    {t:"「我最近也很累啊。」（开始讲自己的事）",score:{T:1,F:-1},isDecoy:false},
-    {t:"认真倾听，然后问：「你需要我做什么？」",score:{F:1,T:1},isDecoy:false}
+    {t:"「要不要帮你分析一下，看哪里可以调整？」",score:{T:2,N:1,Ravenclaw:1,Phlegmatic:1},isDecoy:false},
+    {t:"「抱抱，辛苦了，周末带你去吃好的。」",score:{F:2,Hufflepuff:2,Sanguine:1,altruScore:1},isDecoy:false},
+    {t:"「我最近也很累啊。」（开始讲自己的事）",score:{T:1,F:-1,avoScore:1},isDecoy:false},
+    {t:"认真倾听，然后问：「你需要我做什么？」",score:{F:1,T:1,Hufflepuff:1,stability:1},isDecoy:false}
   ]},
   {id:"tf2",q:"当别人说了一个你不同意但也无害的观点时，你会：",type:"normal",group:"TF",weight:1.2,ops:[
     {t:"直接指出问题，说明为什么不对",score:{T:2},isDecoy:false},
