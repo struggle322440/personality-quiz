@@ -718,6 +718,44 @@ var EQ=[
     {t:"基本可以，偶尔内心有波动",score:{socialDesirability:1},isDecoy:true},
     {t:"表面可以，内心会有些抗拒",score:{socialDesirability:0},isDecoy:false},
     {t:"很难，我这个人情绪都写在脸上",score:{socialDesirability:-1},isDecoy:false}
+  ]},
+  // ---- 学院归属测量 ----
+  {id:"house1",q:"面对一个未知的挑战，你的第一反应是：",type:"normal",group:"house",weight:1.5,ops:[
+    {t:"立刻冲上去先干了再说！",score:{Gryffindor:3}},
+    {t:"先收集信息研究清楚再行动",score:{Ravenclaw:3}},
+    {t:"找可靠的人一起商量稳妥推进",score:{Hufflepuff:3}},
+    {t:"分析利弊选择最有利的路径",score:{Slytherin:3}}
+  ]},
+  {id:"house2",q:"你和团队成员产生分歧时，你更倾向于：",type:"normal",group:"house",weight:1.5,ops:[
+    {t:"坚持自己的判断并全力说服对方",score:{Gryffindor:3}},
+    {t:"用逻辑和事实赢得讨论",score:{Ravenclaw:3}},
+    {t:"愿意妥协以维持团队和谐",score:{Hufflepuff:3}},
+    {t:"暗中观察谁更可能被说服",score:{Slytherin:3}}
+  ]},
+  {id:"house3",q:"你更看重伙伴身上的哪种特质？",type:"normal",group:"house",weight:1.5,ops:[
+    {t:"勇气和行动力",score:{Gryffindor:3}},
+    {t:"智慧和独立思考",score:{Ravenclaw:3}},
+    {t:"忠诚和善良",score:{Hufflepuff:3}},
+    {t:"资源和能力",score:{Slytherin:3}}
+  ]},
+  // ---- 气质类型测量 ----
+  {id:"temp1",q:"你的情绪状态更接近：",type:"normal",group:"temperament",weight:1.5,ops:[
+    {t:"热情洋溢，来得快去得也快",score:{Sanguine:3}},
+    {t:"容易激动，行动力强但有时急躁",score:{Choleric:3}},
+    {t:"细腻敏感，容易沉浸在情绪里",score:{Melancholic:3}},
+    {t:"平稳沉着，不易被外界影响",score:{Phlegmatic:3}}
+  ]},
+  {id:"temp2",q:"面对压力时你通常会：",type:"normal",group:"temperament",weight:1.5,ops:[
+    {t:"找人倾诉寻求支持",score:{Sanguine:3}},
+    {t:"自己扛着，压力转化为行动",score:{Choleric:3}},
+    {t:"独自消化，容易陷入思考",score:{Melancholic:3}},
+    {t:"冷静分析制定应对方案",score:{Phlegmatic:3}}
+  ]},
+  {id:"temp3",q:"你更擅长哪种社交方式？",type:"normal",group:"temperament",weight:1.5,ops:[
+    {t:"快速融入，成为气氛担当",score:{Sanguine:3}},
+    {t:"直接表达观点，掌控话题",score:{Choleric:3}},
+    {t:"深度交流，只对几个人打开",score:{Melancholic:3}},
+    {t:"观察全局后精准出击",score:{Phlegmatic:3}}
   ]}
 ];
 
