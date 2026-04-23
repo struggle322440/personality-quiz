@@ -750,22 +750,22 @@ var GM={
 
 
 var MATCH = {
-  INTJ:{best:"ENFP",worst:"ESFJ",bestReason:"ENFP的热情能融化你的冷静，你的深度让TA着迷",worstReason:"ESFJ的情感需求会让你感到窒息"},
-  INTP:{best:"ENTJ",worst:"ESFJ",bestReason:"ENTJ能推动你落地，你能给TA提供思维深度",worstReason:"ESFJ的社交需求和你的独处需求完全相反"},
-  ENTJ:{best:"INTP",worst:"ISFP",bestReason:"INTP的逻辑深度是你最好的智识伴侣",worstReason:"ISFP的随性会让你抓狂"},
-  ENTP:{best:"INFJ",worst:"ISTJ",bestReason:"INFJ能看穿你的表演，直达你的灵魂",worstReason:"ISTJ的规则感会让你感到窒息"},
-  INFJ:{best:"ENTP",worst:"ESTP",bestReason:"ENTP能激发你的思维，你能给TA情感深度",worstReason:"ESTP的表层活力让你感到空洞"},
-  INFP:{best:"ENFJ",worst:"ESTJ",bestReason:"ENFJ能看见你的价值，给你温暖的支持",worstReason:"ESTJ的效率至上会碾压你的感受"},
-  ENFJ:{best:"INFP",worst:"ISTP",bestReason:"INFP的深度和真诚让你感到被需要",worstReason:"ISTP的冷漠会让你的付出感到白费"},
-  ENFP:{best:"INTJ",worst:"ISTJ",bestReason:"INTJ的深度和神秘感让你欲罢不能",worstReason:"ISTJ的一成不变会让你窒息"},
-  ISTJ:{best:"ESFP",worst:"ENTP",bestReason:"ESFP的活力能让你的生活多一点色彩",worstReason:"ENTP的混乱会让你的秩序感崩溃"},
-  ISFJ:{best:"ESTP",worst:"ENTJ",bestReason:"ESTP能带你体验你不敢尝试的事",worstReason:"ENTJ的强势会让你完全失去自我"},
-  ESTJ:{best:"ISFP",worst:"INTP",bestReason:"ISFP的温柔能软化你的棱角",worstReason:"INTP的拖延和不确定性会让你崩溃"},
-  ESFJ:{best:"ISTP",worst:"INTJ",bestReason:"ISTP的独立能让你学会放手",worstReason:"INTJ的冷漠会让你的付出感到绝望"},
-  ISTP:{best:"ESFJ",worst:"ENFJ",bestReason:"ESFJ的温暖能让你感受到被照顾",worstReason:"ENFJ的情感需求会让你感到被绑架"},
-  ISFP:{best:"ESTJ",worst:"ENTJ",bestReason:"ESTJ的稳定能给你安全感",worstReason:"ENTJ的控制欲会让你喘不过气"},
-  ESTP:{best:"ISFJ",worst:"INFJ",bestReason:"ISFJ的细腻能让你感受到真正的被照顾",worstReason:"INFJ的深度和复杂让你感到疲惫"},
-  ESFP:{best:"ISTJ",worst:"INTJ",bestReason:"ISTJ的稳定是你最好的锚点",worstReason:"INTJ的冷漠会让你的热情无处安放"}
+  INTJ:{best:"ENFP",worst:"ESFJ",bestReason:"ENFP（Ne主导）能打破你的Ni定势，让新可能进入你的世界；TA需要你的Te来落地那些疯狂的想法",worstReason:"ESFJ的Fe需求会让你觉得窒息，你的冷感会让TA不断质疑被爱"},
+  INTP:{best:"ENTJ",worst:"ESFJ",bestReason:"ENTJ（Te主导）能把你的想法变成现实；你的Ti深度让TA的决策更有依据",worstReason:"ESFJ的Fe社交需求和你的Ti独处需求完全相反"},
+  ENTJ:{best:"INTP",worst:"ISFP",bestReason:"INTP（Ti主导）是你最好的智识伴侣，帮你把直觉转化为系统",worstReason:"ISFP的Fi随性会让你觉得混乱，你的效率至上会碾压TA的感受"},
+  ENTP:{best:"INFJ",worst:"ISTJ",bestReason:"INFJ（Ni主导）能看穿你的表演，直达你的灵魂；你的Ne让TA的世界更有趣",worstReason:"ISTJ的Si规则感会让你窒息，你的混乱会让TA崩溃"},
+  INFJ:{best:"ENTP",worst:"ESTP",bestReason:"ENTP（Ne主导）能激发你的思维，你的Ni让TA的疯狂找到方向",worstReason:"ESTP的Se表层活力让你觉得空洞，你的深度让TA觉得麻烦"},
+  INFP:{best:"ENFJ",worst:"ESTJ",bestReason:"ENFJ（Fe主导）能看见你的价值，给你温暖支持；你的Fi深度让TA感到真实",worstReason:"ESTJ的Te效率至上会碾压你的Fi感受"},
+  ENFJ:{best:"INFP",worst:"ISTP",bestReason:"INFP（Fi主导）的深度和真诚让你感到被需要；你的Fe让TA感到被理解",worstReason:"ISTP的Ti冷漠会让你的Fe付出感到白费"},
+  ENFP:{best:"INTJ",worst:"ISTJ",bestReason:"INTJ（Ni主导）的深度和神秘感让你欲罢不能；你的Ne让TA的世界充满可能",worstReason:"ISTJ的Si一成不变会让你窒息"},
+  ISTJ:{best:"ESFP",worst:"ENTP",bestReason:"ESFP（Se主导）的活力能让你的生活多一抹色彩；你的Si给TA一个稳定的锚点",worstReason:"ENTP的Ne混乱会让你的Si秩序感崩溃"},
+  ISFJ:{best:"ESTP",worst:"ENTJ",bestReason:"ESTP（Se主导）能带你体验不敢尝试的事；你的Si给TA一个温暖的家",worstReason:"ENTJ的Te强势会让你完全失去自我"},
+  ESTJ:{best:"ISFP",worst:"INTP",bestReason:"ISFP（Fi主导）的温柔能软化你的棱角；你的Te给TA需要的秩序感",worstReason:"INTP的Ti拖延和不确定性会让你崩溃"},
+  ESFJ:{best:"ISTP",worst:"INTJ",bestReason:"ISTP（Ti主导）的独立能让你学会放手；你的Fe让TA感到被照顾",worstReason:"INTJ的Ni冷漠会让你的Fe付出感到绝望"},
+  ISTP:{best:"ESFJ",worst:"ENFJ",bestReason:"ESFJ（Fe主导）的温暖让你感到被照顾；你的Ti让TA有空间思考",worstReason:"ENFJ的Fe需求会让你觉得被情感绑架"},
+  ISFP:{best:"ESTJ",worst:"ENTJ",bestReason:"ESTJ（Te主导）的稳定给你安全感；你的Fi让TA的效率多一份温度",worstReason:"ENTJ的Te控制欲会让你喘不过气"},
+  ESTP:{best:"ISFJ",worst:"INFJ",bestReason:"ISFJ（Si主导）的细腻让你感到真正被照顾；你的Se让TA的世界更精彩",worstReason:"INFJ的Ni深度和复杂让你感到疲惫"},
+  ESFP:{best:"ISTJ",worst:"INTJ",bestReason:"ISTJ（Si主导）的稳定是你最好的锚点；你的Se让TA的生活更有趣",worstReason:"INTJ的Ni冷漠会让你的Se热情无处安放"}
 };
 
 var ND={
@@ -1154,21 +1154,37 @@ function showTab(tid){
   document.getElementById("scoreDim").style.display=isD?"grid":"none";
 
   if(isA){
-    document.getElementById("rtxt").textContent=GD[result.mbti]||"暂无成长建议。";
+    var advText=GD[result.mbti]||"暂无成长建议。";
+    // 动态替换学院/气质名称
+    advText=advText.replace(/格兰芬多|赫夫帕夫|拉文克劳|斯莱特林/g,result.house||"未知学院");
+    advText=advText.replace(/多血质|胆汁质|抑郁质|粘液质/g,result.temp||"未知气质");
+    document.getElementById("rtxt").textContent=advText;
     document.getElementById("gift").textContent="";
-    document.getElementById("vwarn").classList.remove("show");
+    // 效度低于40时显示警告
+    if(result.validityScore<40){
+      document.getElementById("vwarn").innerHTML='<div style="background:#fef3c7;color:#92400e;padding:10px;border-radius:8px;margin:12px 0;font-size:.85rem">⚠️ 检测到作答可能存在「社会赞许倾向」（效度仅 '+result.validityScore+'%），结果可能过度美化。建议重新测试，选择更真实的反应。</div>';
+      document.getElementById("vwarn").classList.add("show");
+    }else{
+      document.getElementById("vwarn").classList.remove("show");
+    }
     document.getElementById("vtip").textContent="—— 成长建议 · 仅供参考";
   }else if(!isD){
     document.getElementById("rtxt").textContent=isN?niceD(result):truthD(result);
     document.getElementById("gift").textContent="\u{1F381} "+(GM[result.mbti]||"你值得一句专属赠言。");
     document.getElementById("vtip").textContent=isN?"—— 温柔滤镜版 · 仅供参考":"—— 照妖镜版 · 如有不适说明测对了";
-    // 顶部效度标识条
-    var vicon="",vtext="";
-    if(result.validityScore>=70){vicon="🟢";vtext="高可信";}
-    else if(result.validityScore>=40){vicon="🟡";vtext="中等";}
-    else{vicon="🔴";vtext="存疑";}
-    document.getElementById("vwarn").innerHTML='<div style="font-size:.8rem;color:#94a3b8;text-align:center;padding:6px 0;border-top:1px solid #e2e8f0;margin-top:8px">效度：'+vicon+' '+vtext+'（'+result.validityScore+'%）</div>';
-    document.getElementById("vwarn").classList.add("show");
+    // 效度低于40时在解读文本上方插入警告条
+    if(result.validityScore<40){
+      document.getElementById("vwarn").innerHTML='<div style="background:#fef3c7;color:#92400e;padding:10px;border-radius:8px;margin:12px 0;font-size:.85rem">⚠️ 检测到作答可能存在「社会赞许倾向」（效度仅 '+result.validityScore+'%），结果可能过度美化。建议重新测试，选择更真实的反应。</div>';
+      document.getElementById("vwarn").classList.add("show");
+    }else{
+      // 正常效度标识
+      var vicon="",vtext="";
+      if(result.validityScore>=70){vicon="🟢";vtext="高可信";}
+      else if(result.validityScore>=40){vicon="🟡";vtext="中等";}
+      else{vicon="🔴";vtext="存疑";}
+      document.getElementById("vwarn").innerHTML='<div style="font-size:.8rem;color:#94a3b8;text-align:center;padding:6px 0;border-top:1px solid #e2e8f0;margin-top:8px">效度：'+vicon+' '+vtext+'（'+result.validityScore+'%）</div>';
+      document.getElementById("vwarn").classList.add("show");
+    }
   }else{
     showDimBars(result);
     var wtxt=getValidityWarning(result);
