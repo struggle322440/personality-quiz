@@ -223,10 +223,10 @@ var QUESTIONS={
 "40":[
   // ---- E/I 维度 ----
   {id:"ei1",q:"周末晚上，你最理想的状态是：",type:"normal",group:"EI",weight:1.3,ops:[
-    {t:"呼朋引伴去热闹的地方，结束后意犹未尽",score:{E:2,I:-2},isDecoy:false},
-    {t:"和一两个聊得来的朋友小聚，之后各自回家",score:{E:1,I:-1},isDecoy:false},
-    {t:"在家安静地看电影/看书/做自己的事，充电完毕",score:{E:-2,I:2},isDecoy:false},
-    {t:"一个人出门散步，走到哪里算哪里，享受独处",score:{E:-1,I:1},isDecoy:false}
+    {t:"呼朋引伴去热闹的地方，结束后意犹未尽",score:{E:3,I:-3,Sanguine:2,Gryffindor:1,anxietyLove:-1},isDecoy:false},
+    {t:"和一两个聊得来的朋友小聚，之后各自回家",score:{E:1,I:-1,Phlegmatic:1,Hufflepuff:1,stability:1},isDecoy:false},
+    {t:"在家安静地看电影/看书/做自己的事，充电完毕",score:{E:-3,I:3,Melancholic:1,Ravenclaw:2,avoidance:1},isDecoy:false},
+    {t:"一个人出门散步，走到哪里算哪里，享受独处",score:{E:-1,I:1,Phlegmatic:1,Ravenclaw:1,avoidance:1},isDecoy:false}
   ]},
   {id:"ei2",q:"你在一个全是陌生人的社交场合，通常会：",type:"normal",group:"EI",weight:1.2,ops:[
     {t:"主动和周围人攀谈，转换话题也不在话下",score:{E:2,I:-2},isDecoy:false},
@@ -291,10 +291,10 @@ var QUESTIONS={
     {t:"这件事本身美不美，有没有意思",score:{N:1},isDecoy:false}
   ]},
   {id:"sn4",q:"朋友描述一件事用了模糊的时间词（比如「前一阵子」「有一段时间」），你会：",type:"consistency",group:"SN",weight:1.4,ops:[
-    {t:"完全不在意，知道大概就行",score:{N:1,P:1},isDecoy:false},
-    {t:"心里会嘀咕：到底是哪天？",score:{S:2,J:1},isDecoy:false},
-    {t:"会追问具体时间，因为这影响我对事情性质的判断",score:{S:2,T:1},isDecoy:false},
-    {t:"注意到但不会问，显得太较真",score:{F:1},isDecoy:false}
+    {t:"完全不在意，知道大概就行",score:{N:1,P:1,Sanguine:1,Hufflepuff:1},isDecoy:false},
+    {t:"心里会嘀咕：到底是哪天？",score:{S:2,J:1,Ravenclaw:1,Melancholic:1},isDecoy:false},
+    {t:"会追问具体时间，因为这影响我对事情性质的判断",score:{S:2,T:1,Ravenclaw:1,stability:1},isDecoy:false},
+    {t:"注意到但不会问，显得太较真",score:{F:1,avoidance:1,Hufflepuff:1},isDecoy:false}
   ]},
   {id:"sn5",q:"你更享受哪种探索方式？",type:"normal",group:"SN",weight:1.0,ops:[
     {t:"深入研究一个已知的领域，把它搞透",score:{S:2},isDecoy:false},
@@ -347,10 +347,10 @@ var QUESTIONS={
     {t:"希望有人理解我想表达的东西",score:{F:2},isDecoy:false}
   ]},
   {id:"tf5",q:"同事在群里发了一个方案，你明显发现有漏洞，你会：",type:"consistency",group:"TF",weight:1.5,ops:[
-    {t:"私下小窗他，给足面子，问题单独说",score:{F:2},isDecoy:false},
-    {t:"直接在群里指出：逻辑上有问题",score:{T:2,Gryffindor:2},isDecoy:false},
-    {t:"不说，不是我的责任",score:{P:1},isDecoy:false},
-    {t:"先肯定，再说「补充一点思路」",score:{Slytherin:3},isDecoy:false}
+    {t:"私下小窗他，给足面子，问题单独说",score:{F:3,T:-2,Hufflepuff:2,machScore:-2,altruScore:2,honestyRel:1},isDecoy:false},
+    {t:"直接在群里指出：逻辑上有问题",score:{T:3,F:-2,Gryffindor:3,machScore:-1,honestyRel:2,Choleric:1},isDecoy:false},
+    {t:"不说，不是我的责任",score:{P:2,avoScore:2,machScore:1,altruScore:-1},isDecoy:false},
+    {t:"先肯定，再说「补充一点思路」",score:{Slytherin:3,machScore:3,F:1,T:1,controlLove:1},isDecoy:false}
   ]},
   {id:"tf6",q:"你如何看待「善意的谎言」？",type:"normal",group:"TF",weight:1.2,ops:[
     {t:"可以接受，关系比真相重要",score:{F:2},isDecoy:false},
@@ -372,10 +372,10 @@ var QUESTIONS={
   ]},
   // ---- J/P 维度 ----
   {id:"jp1",q:"出行前一晚，你的状态通常是：",type:"normal",group:"JP",weight:1.3,ops:[
-    {t:"行李早就收好了，最后再检查一遍清单",score:{J:3},isDecoy:false},
-    {t:"深夜才开始收，边收边焦虑有没有落下什么",score:{P:2,J:1},isDecoy:false},
-    {t:"随便扔几件衣服，相信什么都能买到",score:{P:3},isDecoy:false},
-    {t:"大致有个谱，最后几小时搞定",score:{J:1,P:1},isDecoy:false}
+    {t:"行李早就收好了，最后再检查一遍清单",score:{J:3,P:-3,Phlegmatic:2,stability:2,anxietyLove:-1},isDecoy:false},
+    {t:"深夜才开始收，边收边焦虑有没有落下什么",score:{P:2,J:1,anxietyLove:2,stability:-1,Melancholic:1},isDecoy:false},
+    {t:"随便扔几件衣服，相信什么都能买到",score:{P:3,J:-3,Sanguine:2,avoidance:1},isDecoy:false},
+    {t:"大致有个谱，最后几小时搞定",score:{J:1,P:1,Phlegmatic:1,stability:1},isDecoy:false}
   ]},
   {id:"jp2",q:"你通常如何做旅行/活动计划？",type:"normal",group:"JP",weight:1.2,ops:[
     {t:"做详细到小时/每天的Excel表，精确规划",score:{J:3},isDecoy:false},
@@ -478,10 +478,10 @@ var QUESTIONS={
 var EQ=[
   // ---- 关系依恋维度 ----
   {id:"rel1",q:"刚在一起时，你最担心的是：",type:"normal",group:"anxietyLove",weight:1.2,ops:[
-    {t:"TA是不是真的喜欢我",score:{anxietyLove:2},isDecoy:false},
-    {t:"我们生活习惯合不合",score:{stability:1},isDecoy:false},
-    {t:"我表现够不够好，能不能留住TA",score:{anxietyLove:1},isDecoy:false},
-    {t:"不担心，享受当下，让关系自然发展",score:{openRel:1},isDecoy:false}
+    {t:"TA是不是真的喜欢我",score:{anxietyLove:3,Melancholic:1,Sanguine:-1},isDecoy:false},
+    {t:"我们生活习惯合不合",score:{stability:2,Phlegmatic:1,J:1},isDecoy:false},
+    {t:"我表现够不够好，能不能留住TA",score:{anxietyLove:2,Enneagram3:1},isDecoy:false},
+    {t:"不担心，享受当下，让关系自然发展",score:{openRel:1,Sanguine:2,avoidance:1},isDecoy:false}
   ]},
   {id:"rel2",q:"给TA发消息，已读30分钟没回复，你会：",type:"normal",group:"anxietyLove",weight:1.3,ops:[
     {t:"做自己的事，等TA回复再说",score:{stability:1},isDecoy:false},
@@ -611,10 +611,10 @@ var EQ=[
     {t:"暴饮暴食或购物发泄",score:{avoidance:0},isDecoy:false}
   ]},
   {id:"beh9",q:"你的愤怒模式更接近？",type:"normal",group:"TF",weight:1.1,ops:[
-    {t:"爆发快但消得也快，说完就完",score:{Choleric:2},isDecoy:false},
-    {t:"很少发火，但发起来很可怕",score:{Phlegmatic:1},isDecoy:false},
-    {t:"藏心里慢慢给对方扣分，不正面冲突",score:{avoidance:1},isDecoy:false},
-    {t:"冷嘲热讽，用言语刺人",score:{T:2},isDecoy:false}
+    {t:"爆发快但消得也快，说完就完",score:{Choleric:2,Sanguine:1,Gryffindor:1,stability:-1},isDecoy:false},
+    {t:"很少发火，但发起来很可怕",score:{Phlegmatic:2,Melancholic:1,Ravenclaw:1,stability:1},isDecoy:false},
+    {t:"藏心里慢慢给对方扣分，不正面冲突",score:{Melancholic:1,avoidance:2,Slytherin:1},isDecoy:false},
+    {t:"冷嘲热讽，用言语刺人",score:{T:2,Slytherin:1,Choleric:1},isDecoy:false}
   ]},
   {id:"beh10",q:"你更容易为什么流泪？",type:"normal",group:"F",weight:1.0,ops:[
     {t:"感人电影/小说中的情节",score:{F:2},isDecoy:false},
@@ -623,16 +623,16 @@ var EQ=[
     {t:"看他人受苦或动物受苦",score:{F:2},isDecoy:false}
   ]},
   {id:"beh11",q:"朋友比你成功时，你的内心声音是：",type:"consistency",group:"competition",weight:1.4,ops:[
-    {t:"真心替他高兴，想学习经验",score:{F:1},isDecoy:false},
-    {t:"有点酸，但控制住了",score:{competition:1},isDecoy:false},
-    {t:"各人有各路，不关我的事",score:{T:1},isDecoy:false},
-    {t:"焦虑，我要更努力才行",score:{Enneagram3:2},isDecoy:false}
+    {t:"真心替他高兴，想学习经验",score:{F:1,altruScore:2,Hufflepuff:1,humility:1},isDecoy:false},
+    {t:"有点酸，但控制住了",score:{competition:1,Enneagram3:1},isDecoy:false},
+    {t:"各人有各路，不关我的事",score:{T:1,avoScore:1,Phlegmatic:1},isDecoy:false},
+    {t:"焦虑，我要更努力才行",score:{Enneagram3:2,Choleric:1,competition:2},isDecoy:false}
   ]},
   {id:"beh12",q:"你不是领导但方案更好，你会：",type:"normal",group:"TF",weight:1.2,ops:[
-    {t:"据理力争，直到大家接受",score:{T:2,Gryffindor:2},isDecoy:false},
-    {t:"先让领导觉得这是他的主意，再推动",score:{Slytherin:3},isDecoy:false},
-    {t:"接受团队决定，但心里保留意见",score:{avoidance:0},isDecoy:false},
-    {t:"嘴上说「好的」，执行时按自己的想法来",score:{Slytherin:1},isDecoy:false}
+    {t:"据理力争，直到大家接受",score:{T:2,Gryffindor:2,Choleric:1,honestyRel:1},isDecoy:false},
+    {t:"先让领导觉得这是他的主意，再推动",score:{Slytherin:3,machScore:2,controlLove:1},isDecoy:false},
+    {t:"接受团队决定，但心里保留意见",score:{P:1,avoScore:1},isDecoy:false},
+    {t:"嘴上说「好的」，执行时按自己的想法来",score:{Slytherin:1,machScore:1,avoScore:1},isDecoy:false}
   ]},
   {id:"beh13",q:"面对突发重大改变，你的反应最接近：",type:"normal",group:"JP",weight:1.1,ops:[
     {t:"兴奋，视作新的机会",score:{P:2},isDecoy:false},
@@ -718,44 +718,6 @@ var EQ=[
     {t:"基本可以，偶尔内心有波动",score:{socialDesirability:1},isDecoy:true},
     {t:"表面可以，内心会有些抗拒",score:{socialDesirability:0},isDecoy:false},
     {t:"很难，我这个人情绪都写在脸上",score:{socialDesirability:-1},isDecoy:false}
-  ]},
-  // ---- 学院归属测量 ----
-  {id:"house1",q:"面对一个未知的挑战，你的第一反应是：",type:"normal",group:"house",weight:1.5,ops:[
-    {t:"立刻冲上去先干了再说！",score:{Gryffindor:3}},
-    {t:"先收集信息研究清楚再行动",score:{Ravenclaw:3}},
-    {t:"找可靠的人一起商量稳妥推进",score:{Hufflepuff:3}},
-    {t:"分析利弊选择最有利的路径",score:{Slytherin:3}}
-  ]},
-  {id:"house2",q:"你和团队成员产生分歧时，你更倾向于：",type:"normal",group:"house",weight:1.5,ops:[
-    {t:"坚持自己的判断并全力说服对方",score:{Gryffindor:3}},
-    {t:"用逻辑和事实赢得讨论",score:{Ravenclaw:3}},
-    {t:"愿意妥协以维持团队和谐",score:{Hufflepuff:3}},
-    {t:"暗中观察谁更可能被说服",score:{Slytherin:3}}
-  ]},
-  {id:"house3",q:"你更看重伙伴身上的哪种特质？",type:"normal",group:"house",weight:1.5,ops:[
-    {t:"勇气和行动力",score:{Gryffindor:3}},
-    {t:"智慧和独立思考",score:{Ravenclaw:3}},
-    {t:"忠诚和善良",score:{Hufflepuff:3}},
-    {t:"资源和能力",score:{Slytherin:3}}
-  ]},
-  // ---- 气质类型测量 ----
-  {id:"temp1",q:"你的情绪状态更接近：",type:"normal",group:"temperament",weight:1.5,ops:[
-    {t:"热情洋溢，来得快去得也快",score:{Sanguine:3}},
-    {t:"容易激动，行动力强但有时急躁",score:{Choleric:3}},
-    {t:"细腻敏感，容易沉浸在情绪里",score:{Melancholic:3}},
-    {t:"平稳沉着，不易被外界影响",score:{Phlegmatic:3}}
-  ]},
-  {id:"temp2",q:"面对压力时你通常会：",type:"normal",group:"temperament",weight:1.5,ops:[
-    {t:"找人倾诉寻求支持",score:{Sanguine:3}},
-    {t:"自己扛着，压力转化为行动",score:{Choleric:3}},
-    {t:"独自消化，容易陷入思考",score:{Melancholic:3}},
-    {t:"冷静分析制定应对方案",score:{Phlegmatic:3}}
-  ]},
-  {id:"temp3",q:"你更擅长哪种社交方式？",type:"normal",group:"temperament",weight:1.5,ops:[
-    {t:"快速融入，成为气氛担当",score:{Sanguine:3}},
-    {t:"直接表达观点，掌控话题",score:{Choleric:3}},
-    {t:"深度交流，只对几个人打开",score:{Melancholic:3}},
-    {t:"观察全局后精准出击",score:{Phlegmatic:3}}
   ]}
 ];
 
