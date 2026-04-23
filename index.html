@@ -63,6 +63,9 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .dim-bar{background:#e2e8f0;border-radius:99px;height:8px;overflow:hidden;margin-bottom:4px}
 .dim-fill{height:100%;border-radius:99px;transition:width .6s}
 .dim-label{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700}
+.match-hint{margin-top:16px;padding:14px;background:#f0f1f5;border-radius:12px}
+.match-btn{background:none;border:1.5px solid #4f46e5;color:#4f46e5;padding:8px 18px;border-radius:99px;cursor:pointer;font-size:.9rem;font-weight:600}
+.match-result{margin-top:12px;font-size:.9rem;line-height:1.8;color:#334155}
 .share{margin-top:18px;padding:14px;background:#f0f1f5;border-radius:12px}
 .share p{font-size:.84rem;color:#64748b;margin-bottom:8px;white-space:pre-line}
 .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
@@ -91,6 +94,12 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<meta name="description" content="80题多维人格深度测试，含效度检验、毒舌锐评、成长建议。测测你的隐藏人格。">
+<meta property="og:title" content="人格档案馆 · 测测你的隐藏人格">
+<meta property="og:description" content="有多维效度检测，还有毒舌锐评。你敢直面真实的自己吗？">
+<meta property="og:image" content="https://struggle322440.github.io/personality-quiz/avatars/INTJ.png">
+<meta property="og:url" content="https://struggle322440.github.io/personality-quiz/">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="wrap">
@@ -172,10 +181,14 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
         </div>
       </div>
       <div class="vwarn" id="vwarn"></div>
+      <div class="match-hint" id="matchHint" style="display:none">
+        <button class="match-btn" id="matchBtn">🤔 看看你和哪种人格最合拍？</button>
+        <div class="match-result" id="matchResult" style="display:none"></div>
+      </div>
       <div class="share">
         <p id="shareTxt"></p>
         <div class="btns">
-          <button class="btn btn-copy" id="copyBtn">生成结果图片</button>
+          <button class="btn btn-copy" id="copyBtn">📸 生成专属人格卡片</button>
           <button class="btn btn-re" id="reBtn">重新测试</button>
         </div>
         <div class="toast" id="toast">图片已生成！</div>
@@ -736,6 +749,25 @@ var GM={
 
 
 
+var MATCH = {
+  INTJ:{best:"ENFP",worst:"ESFJ",bestReason:"ENFP的热情能融化你的冷静，你的深度让TA着迷",worstReason:"ESFJ的情感需求会让你感到窒息"},
+  INTP:{best:"ENTJ",worst:"ESFJ",bestReason:"ENTJ能推动你落地，你能给TA提供思维深度",worstReason:"ESFJ的社交需求和你的独处需求完全相反"},
+  ENTJ:{best:"INTP",worst:"ISFP",bestReason:"INTP的逻辑深度是你最好的智识伴侣",worstReason:"ISFP的随性会让你抓狂"},
+  ENTP:{best:"INFJ",worst:"ISTJ",bestReason:"INFJ能看穿你的表演，直达你的灵魂",worstReason:"ISTJ的规则感会让你感到窒息"},
+  INFJ:{best:"ENTP",worst:"ESTP",bestReason:"ENTP能激发你的思维，你能给TA情感深度",worstReason:"ESTP的表层活力让你感到空洞"},
+  INFP:{best:"ENFJ",worst:"ESTJ",bestReason:"ENFJ能看见你的价值，给你温暖的支持",worstReason:"ESTJ的效率至上会碾压你的感受"},
+  ENFJ:{best:"INFP",worst:"ISTP",bestReason:"INFP的深度和真诚让你感到被需要",worstReason:"ISTP的冷漠会让你的付出感到白费"},
+  ENFP:{best:"INTJ",worst:"ISTJ",bestReason:"INTJ的深度和神秘感让你欲罢不能",worstReason:"ISTJ的一成不变会让你窒息"},
+  ISTJ:{best:"ESFP",worst:"ENTP",bestReason:"ESFP的活力能让你的生活多一点色彩",worstReason:"ENTP的混乱会让你的秩序感崩溃"},
+  ISFJ:{best:"ESTP",worst:"ENTJ",bestReason:"ESTP能带你体验你不敢尝试的事",worstReason:"ENTJ的强势会让你完全失去自我"},
+  ESTJ:{best:"ISFP",worst:"INTP",bestReason:"ISFP的温柔能软化你的棱角",worstReason:"INTP的拖延和不确定性会让你崩溃"},
+  ESFJ:{best:"ISTP",worst:"INTJ",bestReason:"ISTP的独立能让你学会放手",worstReason:"INTJ的冷漠会让你的付出感到绝望"},
+  ISTP:{best:"ESFJ",worst:"ENFJ",bestReason:"ESFJ的温暖能让你感受到被照顾",worstReason:"ENFJ的情感需求会让你感到被绑架"},
+  ISFP:{best:"ESTJ",worst:"ENTJ",bestReason:"ESTJ的稳定能给你安全感",worstReason:"ENTJ的控制欲会让你喘不过气"},
+  ESTP:{best:"ISFJ",worst:"INFJ",bestReason:"ISFJ的细腻能让你感受到真正的被照顾",worstReason:"INFJ的深度和复杂让你感到疲惫"},
+  ESFP:{best:"ISTJ",worst:"INTJ",bestReason:"ISTJ的稳定是你最好的锚点",worstReason:"INTJ的冷漠会让你的热情无处安放"}
+};
+
 var ND={
 "INTJ":"你大概是一个很难被定义的人。\n\n在外人眼里，你是那个「冷静到有点可怕」的存在——脑子里永远有计划，说话永远有逻辑，做事永远有目的。但只有你自己知道，那些深夜里的反复推演、那些对人性复杂角落的洞察、那些对「意义」这件事近乎偏执的追问，都不是为了掌控什么，而是因为你真的很难忍受肤浅。\n\n你渴望被理解，但很难被说服。你的标准不是用来要求别人的，是用来要求自己的——可你也确实会用这个标准去丈量别人，然后在某个瞬间感到失望。这是你的温柔，也是你的残忍。\n\n你不太会表达情感。不是不会，是不知道怎么开口。所以你选择了沉默，用行动代替语言，用分析代替拥抱。这是你的方式，但偶尔，你也需要让自己被接住一次。\n\n你很罕见，也很珍贵。你的存在本身，就是对这个世界的一种抗议——抗议平庸，抗议敷衍，抗议一切不经过思考就交出的答案。你值得遇到一个能跟得上你节奏的人，也值得允许自己偶尔慢下来，感受一下这个世界除了「效率」以外的部分。\n\n学院归属是斯莱特林——你当然有野心，但你的野心从来不是碾压别人，而是证明给自己看：这个世界值得你认真对待，而你，配得上认真对待你的人。\n\n你的气质是粘液质，沉稳、冷静、不轻易动摇。这是你的铠甲，也是有时候让你显得遥远的原因。但那些真正走进你世界的人会发现，你的外壳之下，是一颗比谁都想被懂得的心。",
 "INTP":"你是一个脑子里住着整个宇宙的人。\n\n你喜欢思考，热爱逻辑，对这个世界有无数个「为什么」在脑子里同时运转。你的大脑是一座永不停歇的图书馆，哪怕在洗澡的时候也在自动推演各种可能性。你不是不说话，只是觉得很多话还没想清楚，说出来不如想进去。\n\n你不是社交达人，这是真的。但和你深度对话过的人，通常会对你念念不忘——因为你的脑子里真的有很多别人想不到的东西，那种「原来还可以这样想」的瞬间，往往发生在和你聊天之后。\n\n你有一种独特的温柔，是那种不会主动热情，但如果你真的需要帮助，会默默帮你把整个问题拆解清楚的人。你的好，是那种不会张扬的好。\n\n你习惯性地把情感那扇门关小一点，因为你觉得情感是混乱的、不可控的。但那不代表你没有——只是你选择让它住在更深的地方，等一个真正值得的人来敲门。\n\n你的内心世界很丰富，丰富到有时候自己都被自己的思维迷宫绕晕。但别忘了，外面的世界也在等你。偶尔出去走走，让别人看看你的宇宙，也不坏。\n\n学院归属是拉文克劳——对知识的渴望是你最真实的驱动力。而你的气质是抑郁质，那种细腻的、感受力很强的类型。你的敏感不是弱点，是你和这个世界之间最诚实的通道。",
@@ -1172,6 +1204,18 @@ document.getElementById("goBtn").addEventListener("click",function(){
   document.getElementById("resArea").classList.add("show");
   showTab("nice");
   document.getElementById("resArea").scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("matchHint").style.display="block";
+});
+
+var matchBtn=document.getElementById("matchBtn");
+if(matchBtn) matchBtn.addEventListener("click",function(){
+  if(!result)return;
+  var m=MATCH[result.mbti];
+  if(!m)return;
+  var el=document.getElementById("matchResult");
+  el.innerHTML='<div style="margin-bottom:8px">💚 <strong>最合拍：'+m.best+'</strong> — '+m.bestReason+'</div><div>💔 <strong>最虐心：'+m.worst+'</strong> — '+m.worstReason+'</div>';
+  el.style.display="block";
+  this.style.display="none";
 });
 
 var tabs=document.querySelectorAll(".tab");
