@@ -21,6 +21,7 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
 .ver-ctrl select{padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;font-size:.88rem;cursor:pointer}
 .ver-ctrl button{background:#4f46e5;color:#fff;border:none;padding:5px 14px;border-radius:20px;font-size:.88rem;cursor:pointer}
 .ver-ctrl button:hover{background:#4338ca}
+#clearCacheBtn:hover{background:#cbd5e1;color:#475569}
 .warn{background:#fef9c3;color:#854d0e;padding:10px 14px;border-radius:12px;font-size:.86rem;margin-bottom:18px;border-left:4px solid #f59e0b}
 .qcard{background:#f8fafc;border-radius:16px;padding:16px 18px;margin-bottom:12px;border:1.5px solid #e2e8f0;transition:border-color .15s}
 .qcard:hover{border-color:#c7d2fe}
@@ -114,6 +115,7 @@ h1{font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:2px}
         <select id="verSel"><option value="40">40题精简</option><option value="80" selected>80题完整</option></select>
         <button id="verBtn">切换</button>
       </div>
+      <button id="clearCacheBtn" title="清空缓存并刷新" style="background:#e2e8f0;color:#64748b;border:none;padding:5px 12px;border-radius:16px;font-size:.78rem;cursor:pointer">🗑️ 清空缓存</button>
     </div>
     <div class="warn">请选择你「大概率会做的真实反应」，而非「你认为更体面的答案」。部分题目为一致性检验题，不会影响最终结果。</div>
     <div id="qBox"></div>
@@ -1200,6 +1202,12 @@ function showTab(tid){
   for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle("on",tabs[i].getAttribute("data-t")===tid);
 }
 
+document.getElementById("clearCacheBtn").addEventListener("click",function(){
+  if(confirm("确定清空所有缓存数据并重新开始？")){
+    localStorage.clear();
+    location.reload();
+  }
+});
 document.getElementById("goBtn").addEventListener("click",function(){
   if(Object.keys(answers).length<questions.length){
     for(var i=0;i<questions.length;i++){
